@@ -10,7 +10,24 @@ const User = sequelize.define(
         login:{type: DataTypes.STRING, unique: true},
         email:{type: DataTypes.STRING, unique: true},
         password:{type: DataTypes.STRING},
-        role:{type: DataTypes.STRING, defaultValue: 'USER'},
+        roles: {type: DataTypes.ARRAY(DataTypes.STRING)},
+        isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
+        activationLink: {type: DataTypes.STRING}
+    }
+)
+
+const Role = sequelize.define(
+    'role',
+    {
+        id:{type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true},
+        name: {type: DataTypes.STRING, defaultValue: 'USER'},
+    }
+)
+
+const Token = sequelize.define(
+    'token',
+    {
+        refreshToken: {type: DataTypes.STRING}
     }
 )
 
@@ -85,6 +102,9 @@ Basket.belongsTo(User);
 User.hasMany(Raiting);
 Raiting.belongsTo(User);
 
+User.hasOne(Token);
+Token.belongsTo(User);
+
 Basket.hasMany(BasketDevice);
 BasketDevice.belongsTo(Basket);
 
@@ -108,6 +128,8 @@ Brand.belongsToMany(Type,{through: TypeBrand});
 
 module.exports = {
     User,
+    Role,
+    Token,
     Basket,
     Device,
     Brand,
