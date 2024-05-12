@@ -25,7 +25,7 @@ class UserController {
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             return res.json(userData)
         } catch (e) {
-            next(e);
+            return res.json(e.message);
         }
     }
 
@@ -70,24 +70,37 @@ class UserController {
         }
     }
 
-    // async addRole(req, res, next) {
-    //     try {
-    //         const {id, role} = req.body;
-    //         const addRoleUser = await userService.addRole(id, role);
-    //         return res.json(addRoleUser);
-    //     } catch (e) {
-    //         return res.json(e.message);
-    //     }
-    // }
+   async addRole(req, res, next) {
+    try {
+        const {userId, roleId} = req.body;
+        const newRole = await userService.addRole(userId, roleId);
 
-    // async removeRole(req, res, next) {
-    //     try { const {id, role} = req.body;
-    //       const deleteRoleUser = await userService.removeRole(id, role);
-    //       return res.json(deleteRoleUser);
-    //     } catch (e) {
-    //         return res.json(e.message);
-    //     }
-    // }
+        return res.json(newRole);
+    } catch (e) {
+        return res.json(e.message);
+    }
+   }
+
+
+   async removeRole(req, res, next) {
+    try {
+        const {userId, roleId} = req.body;
+        const removeRole = await userService.removeRole(userId, roleId);
+
+        return res.json(removeRole);
+    } catch (e) {
+        return res.json(e.message);
+    }
+   }
+
+    async getAllRoles(req, res, next) {
+        try { 
+            const roles = await userService.getAllRole();
+            return res.json(roles);
+        } catch (e) {
+            return res.json(e.message);
+        }
+    }
     
 }
 

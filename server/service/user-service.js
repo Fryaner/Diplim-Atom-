@@ -1,5 +1,6 @@
 const {User} = require('../models/models');
 const {Role} = require('../models/models');
+const {RoleUser} = require('../models/models');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mailService = require('./mail-service');
@@ -11,7 +12,6 @@ class UserService {
     async registration(lastName, firstName, email, login, password) {
         const candidateEmail = await User.findOne({where: {email}});
         const candidateLogin = await User.findOne({where: {login}});
-        const userRole = await Role.findOne({where: {name: 'USER'}});
         if (candidateEmail) {
             throw ApiError.badRequest(`Пользователь с почтовым адресом ${email} уже существует`);
         }
@@ -20,14 +20,20 @@ class UserService {
         }
         const hashPassword = await bcrypt.hash(password, 3);
         const activationLink = uuid.v4();
-        const user = await User.create({lastName, firstName, email, login, password: hashPassword, activationLink, roles: [userRole.name]});
+
+        const user = await User.create({lastName, firstName, email, login, password: hashPassword, activationLink});
+        const defaultRole = await Role.findOne({where: {name: "USER"}});
+        const userRole = await RoleUser.create({userId: user.id, roleId: defaultRole.id});
+        const usersRoles = await RoleUser.findOne({where: {userId: user.id}});
+        const role = await Role.findOne({where: {id: usersRoles.roleId}});
+        
         await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`);
         const tokens = tokenService.generateTokens(
             {
-                id: user.id,
+                id: userRole.id,
                 email: user.email,
                 login: user.login,
-                roles: user.roles
+                roles: [role.name],
             });
         await tokenService.saveToken(user.id, tokens.refreshToken);
 
@@ -39,7 +45,6 @@ class UserService {
                 firstName: user.firstName,
                 login: user.login,
                 password: user.password,
-                roles: user.roles,
             }
         }
     }
@@ -61,12 +66,18 @@ class UserService {
         if (!isPassEquals) {
             throw ApiError.badRequest('Некорректный пароль');
         }
+        const usersRoles = await RoleUser.findAll({where: {userId: user.id}});
+
+        const roles = await Promise.all(usersRoles.map(async (roleUser) => {
+            const role = await Role.findOne({ where: { id: roleUser.roleId } });
+            return role.name;
+          }));
+        
         const tokens = tokenService.generateTokens(
             {
                 id: user.id,
                 email: user.email,
-                login: user.login,
-                roles: user.roles
+                roles: roles,
             });
 
         await tokenService.saveToken(user.id, tokens.refreshToken);
@@ -99,12 +110,14 @@ class UserService {
             throw ApiError.unauthorizedError();
         }
         const user = await User.findOne({where: {id: userData.id}});
+        const usersRoles = await RoleUser.findOne({where: {userId: user.id}});
+        const role = await Role.findOne({where: {id: usersRoles.roleId}});
         const tokens = tokenService.generateTokens(
             {
                 id: user.id,
                 email: user.email,
                 login: user.login,
-                roles: user.roles
+                roles: [role.name],
             });
 
         await tokenService.saveToken(user.id, tokens.refreshToken);
@@ -127,29 +140,46 @@ class UserService {
         return users;
     }
 
-    // async addRole(id,role) {
-    //     if (!role) {
-    //        throw ApiError.badRequest("Заполните поле");
-    //     }
-    //         const userRole = await Role.findOne({where: {name: role}});
-    //     if (!userRole) {
-    //         throw ApiError.badRequest("Такой роли не существует");
-    //     }
-    //         const userRoles = await User.findOne({where: {id}});
-    //         userRoles.roles.forEach(role => {
-    //             if (role === userRole.name) {
-    //                 throw ApiError.badRequest("Данная роль уже присутствует у пользователя");
-    //             }
-    //         })
-    //         const user = await User.update({roles: [...userRoles.roles, userRole.name]}, {where: {id}});
-    //         return user;
+    async addRole(userId, roleId) {
+        const roles = await Role.findAll();
+        const rolesId =  await Promise.all(roles.map(async (roles) => {
+            return roles.id;
+        }))
 
-    // }
+        if (!rolesId.includes(roleId)) {
+            throw new Error('Роль не существует');
+          }
+        
+          const existingUser = await RoleUser.findOne({
+            where: { userId }
+          });
+        
+          if (!existingUser) {
+            throw new Error('Пользователь не существует');
+          }
 
-    // async removeRole(id, role) {
-    //     const userRole = await Role.findOne({where: {name: role}});
-    //     const user = await User.update({roles: [...userRoles.roles, userRole.name]}, {where: {id}});
-    // }
+          const existingRole = await RoleUser.findOne({
+            where: {roleId }
+          });
+        
+          if (existingRole) {
+            throw new Error('У пользователя уже есть эта роль');
+          }
+
+          const newRole = await RoleUser.create({userId, roleId});
+          return newRole;
+    }
+
+    
+    async removeRole(userId, roleId, currentRoleId) {
+        const newRole = await RoleUser.destroy({where: {userId, roleId}});
+        return newRole;
+    }
+
+    async getAllRole() {
+        const roles = await Role.findAll();
+        return roles;
+    }
 }
 
 module.exports = new UserService();

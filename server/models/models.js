@@ -10,9 +10,23 @@ const User = sequelize.define(
         login:{type: DataTypes.STRING, unique: true},
         email:{type: DataTypes.STRING, unique: true},
         password:{type: DataTypes.STRING},
-        roles: {type: DataTypes.ARRAY(DataTypes.STRING)},
         isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
         activationLink: {type: DataTypes.STRING}
+    }
+)
+
+const RoleUser = sequelize.define(
+    'role_user',
+    {
+    id:{type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true}
+    },
+    {
+        indexes: [
+          {
+            unique: true,
+            fields: ['userId', 'roleId']
+          }
+        ]
     }
 )
 
@@ -105,6 +119,12 @@ Raiting.belongsTo(User);
 User.hasOne(Token);
 Token.belongsTo(User);
 
+User.hasMany(RoleUser, { onDelete: 'CASCADE' });
+RoleUser.belongsTo(User, { onDelete: 'CASCADE' });
+
+Role.hasMany(RoleUser);
+RoleUser.belongsTo(Role);
+
 Basket.hasMany(BasketDevice);
 BasketDevice.belongsTo(Basket);
 
@@ -129,6 +149,7 @@ Brand.belongsToMany(Type,{through: TypeBrand});
 module.exports = {
     User,
     Role,
+    RoleUser,
     Token,
     Basket,
     Device,
