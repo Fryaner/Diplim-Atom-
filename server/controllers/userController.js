@@ -14,7 +14,7 @@ class UserController {
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             return res.json(userData)
         } catch (e) {
-            next(e);
+            return res.json(e.message)
         }
     }
 
@@ -66,9 +66,28 @@ class UserController {
             const users = await userService.getAllUsers();
             return res.json(users);
         } catch (e) {
-            next(e);
+            return res.json(e.message)
         }
     }
+
+    // async addRole(req, res, next) {
+    //     try {
+    //         const {id, role} = req.body;
+    //         const addRoleUser = await userService.addRole(id, role);
+    //         return res.json(addRoleUser);
+    //     } catch (e) {
+    //         return res.json(e.message);
+    //     }
+    // }
+
+    // async removeRole(req, res, next) {
+    //     try { const {id, role} = req.body;
+    //       const deleteRoleUser = await userService.removeRole(id, role);
+    //       return res.json(deleteRoleUser);
+    //     } catch (e) {
+    //         return res.json(e.message);
+    //     }
+    // }
     
 }
 

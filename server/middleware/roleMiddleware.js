@@ -1,4 +1,5 @@
 const tokenService = require('../service/token-service');
+const ApiError = require('../error/apiError');
 
 module.exports = function (roles) {
     return function (req, res, next) {
@@ -22,7 +23,7 @@ module.exports = function (roles) {
             });
 
             if (!hasRole) {
-                return next(ApiError.unauthorizedError());
+                return res.json(`У вас нет прав, вы должны иметь права - ${roles}`);
             }
 
             next();

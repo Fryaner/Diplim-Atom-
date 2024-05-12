@@ -13,6 +13,8 @@ router.post('/login', userController.login);
 router.post('/logout', userController.logout);
 router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh);
-router.get('/', authMiddlleware, userController.getUsers);
+router.get('/', roleMiddleware(['ADMIN']), userController.getUsers);
+
+// router.post('/addRole',userController.addRole);
 
 module.exports = router;

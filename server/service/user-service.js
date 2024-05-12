@@ -5,12 +5,13 @@ const uuid = require('uuid');
 const mailService = require('./mail-service');
 const tokenService = require('./token-service');
 const ApiError = require('../error/apiError');
+const { where } = require('sequelize');
 
 class UserService {
     async registration(lastName, firstName, email, login, password) {
         const candidateEmail = await User.findOne({where: {email}});
         const candidateLogin = await User.findOne({where: {login}});
-        const userRole = await Role.findOne({name: 'USER'});
+        const userRole = await Role.findOne({where: {name: 'USER'}});
         if (candidateEmail) {
             throw ApiError.badRequest(`Пользователь с почтовым адресом ${email} уже существует`);
         }
@@ -21,7 +22,13 @@ class UserService {
         const activationLink = uuid.v4();
         const user = await User.create({lastName, firstName, email, login, password: hashPassword, activationLink, roles: [userRole.name]});
         await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`);
-        const tokens = tokenService.generateTokens({id: user.id, email: user.email, lastName: user.lastName, firstName: user.firstName});
+        const tokens = tokenService.generateTokens(
+            {
+                id: user.id,
+                email: user.email,
+                login: user.login,
+                roles: user.roles
+            });
         await tokenService.saveToken(user.id, tokens.refreshToken);
 
         return {
@@ -54,7 +61,13 @@ class UserService {
         if (!isPassEquals) {
             throw ApiError.badRequest('Некорректный пароль');
         }
-        const tokens = tokenService.generateTokens({email: user.email, lastName: user.lastName, firstName: user.firstName});
+        const tokens = tokenService.generateTokens(
+            {
+                id: user.id,
+                email: user.email,
+                login: user.login,
+                roles: user.roles
+            });
 
         await tokenService.saveToken(user.id, tokens.refreshToken);
 
@@ -85,8 +98,14 @@ class UserService {
         if (!userData || !tokenFromDb) {
             throw ApiError.unauthorizedError();
         }
-        const user = await User.findOne({id: userData.id});
-        const tokens = tokenService.generateTokens({email: user.email, lastName: user.lastName, firstName: user.firstName});
+        const user = await User.findOne({where: {id: userData.id}});
+        const tokens = tokenService.generateTokens(
+            {
+                id: user.id,
+                email: user.email,
+                login: user.login,
+                roles: user.roles
+            });
 
         await tokenService.saveToken(user.id, tokens.refreshToken);
 
@@ -107,6 +126,30 @@ class UserService {
         const users = await User.findAll();
         return users;
     }
+
+    // async addRole(id,role) {
+    //     if (!role) {
+    //        throw ApiError.badRequest("Заполните поле");
+    //     }
+    //         const userRole = await Role.findOne({where: {name: role}});
+    //     if (!userRole) {
+    //         throw ApiError.badRequest("Такой роли не существует");
+    //     }
+    //         const userRoles = await User.findOne({where: {id}});
+    //         userRoles.roles.forEach(role => {
+    //             if (role === userRole.name) {
+    //                 throw ApiError.badRequest("Данная роль уже присутствует у пользователя");
+    //             }
+    //         })
+    //         const user = await User.update({roles: [...userRoles.roles, userRole.name]}, {where: {id}});
+    //         return user;
+
+    // }
+
+    // async removeRole(id, role) {
+    //     const userRole = await Role.findOne({where: {name: role}});
+    //     const user = await User.update({roles: [...userRoles.roles, userRole.name]}, {where: {id}});
+    // }
 }
 
 module.exports = new UserService();
