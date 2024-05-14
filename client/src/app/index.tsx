@@ -8,7 +8,7 @@ const App = () => {
     let [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
+        setTimeout(() => {
           setIsLoading(true);
         }, 2000);
       }, []); 

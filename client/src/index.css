@@ -80,6 +80,19 @@
     font-family: "Roboto", sans-serif;
   }
   .DialogContent {
-    min-width: 900px;
+    max-width: 900px;
+    width: 100%;
+  }
+  .DialogOverlay {
+    background: rgb(0, 0, 0);
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    place-items: center;
+    overflow-y: auto;
   }
 }
