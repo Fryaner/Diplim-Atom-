@@ -37,7 +37,7 @@ const Mobileheader = () => {
                     <ShoppingBasket/>
                 </Button> 
             </div>
-                <div className={`absolute bg-white w-[100%] h-lvh left-[0px] ease-in duration-300 flex flex-col gap-[16px] ${isActiveMenu ? "" : 'left-[-1000px]'}`}>
+                <div className={`overflow-auto absolute bg-white w-[100%] h-lvh ease-in duration-300 flex flex-col gap-[16px] ${isActiveMenu ? "left-[0px]" : 'left-[-1000px]'}`}>
                     <nav className="bg-[#F7F7F7] flex justify-between py-[16px] items-center px-[16px]">
                         {
                         isActiveSearch ?  
