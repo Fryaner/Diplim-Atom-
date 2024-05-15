@@ -1,5 +1,5 @@
 import StartPage from "../pages/startPage";
-import Layout from "../components/layout/layout";
+import Layout from "../components/layout";
 import { Theme } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 

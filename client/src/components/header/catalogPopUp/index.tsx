@@ -6,21 +6,21 @@ import {
     DialogTitle,
     DialogTrigger,
     DialogOverlay,
-  } from "../../UI/Dialog/index"  
-import CatalogLists from "./catalogLists";
-import { Button } from "../../UI/Button";
+  } from "../../../UI/Dialog/index"  
+import CatalogLists from "../catalogLists";
+import { Button } from "../../../UI/Button";
 import { useState } from "react";
-import Burger from "../../UI/Burger";
+import Burger from "../../../UI/Burger";
 
 
 const CatalogPopUp = () => {
-    const [isActive, isSetActive] = useState(false);
+    const [isActiveCatalog, isSetActiveCatalog] = useState(false);
     return (
-        <Dialog onOpenChange={() => isActive ? isSetActive(false) : isSetActive(true)}>
+        <Dialog onOpenChange={() => isActiveCatalog ? isSetActiveCatalog(false) : isSetActiveCatalog(true)}>
             <DialogTrigger asChild>
                 <Button variant="outline" className="w-[150px]">
                     <div className="inline-flex bg-[#8761D9] items-center gap-[9px] rounded-md p-[16px]">
-                        <Burger isActive={isActive}/>
+                        <Burger isActive={isActiveCatalog}/>
                         <p className="text-[#FFFFFF] font-bold tracking-[5px]">Каталог</p>
                     </div>
                 </Button>

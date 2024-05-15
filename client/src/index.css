@@ -73,11 +73,11 @@
 @layer base {
   * {
     @apply border-border;
+    font-family: "Mulish", sans-serif;
   }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: "Roboto", sans-serif;
   }
   .DialogContent {
     max-width: 900px;

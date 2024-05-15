@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { ScrollArea } from "../../UI/Scroll";
-import CatalogSection from "./catalogItem";
+import { ScrollArea } from "../../../UI/Scroll";
+import CatalogSection from "../catalogItem";
 import {    
     Corpus,
     Keybourd,
@@ -9,7 +9,7 @@ import {
     Videocarta,
     Mouse,
     Block
-} from '../../assets/images/index';
+} from '../../../assets/images/index';
 
 const ListsNameProducts = [
     {id: 1,   name: 'Игровая мышка', image: Mouse},
