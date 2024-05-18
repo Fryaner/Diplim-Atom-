@@ -9,7 +9,9 @@ const models = require('./models/models');
 const errorHadlerMiddleware = require('./middleware/errorHadnlingMiddleware');
 const fileUpload = require('express-fileupload');
 const app = express();
+const cors = require('cors');
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'static')));

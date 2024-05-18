@@ -13,7 +13,7 @@ router.post('/login', userController.login);
 router.post('/logout', userController.logout);
 router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh);
-router.get('/', roleMiddleware(["ADMIN"]), userController.getUsers);
+router.get('/', userController.getUsers);
 
 router.post('/addRole',userController.addRole);
 router.delete('/removeRole',userController.removeRole);
