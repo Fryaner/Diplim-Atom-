@@ -9,19 +9,23 @@ const ApiError = require('../error/apiError');
 const { where } = require('sequelize');
 
 class UserService {
-    async registration(lastName, firstName, email, login, password) {
+    async registration(lastName, firstName, patronymic, email, phone, login, password) {
         const candidateEmail = await User.findOne({where: {email}});
         const candidateLogin = await User.findOne({where: {login}});
+        const candidatePhone = await User.findOne({where: {phone}});
         if (candidateEmail) {
             throw ApiError.badRequest(`Пользователь с почтовым адресом ${email} уже существует`);
         }
         if (candidateLogin) {
             throw ApiError.badRequest(`Пользователь с таким логином - ${login} уже существует`);
         }
+        if (candidatePhone) {
+            throw ApiError.badRequest(`Пользователь с таким номером телефона - ${phone} уже существует`);
+        }
         const hashPassword = await bcrypt.hash(password, 3);
         const activationLink = uuid.v4();
 
-        const user = await User.create({lastName, firstName, email, login, password: hashPassword, activationLink});
+        const user = await User.create({lastName, firstName, patronymic, email, phone, login ,password: hashPassword, activationLink});
         const defaultRole = await Role.findOne({where: {name: "USER"}});
         const userRole = await RoleUser.create({userId: user.id, roleId: defaultRole.id});
         const usersRoles = await RoleUser.findOne({where: {userId: user.id}});
