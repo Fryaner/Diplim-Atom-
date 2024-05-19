@@ -12,8 +12,8 @@ class UserController {
             const {lastName, firstName, patronymic, email, phone, login, password} = req.body;
             const userData = await userService.registration(lastName, firstName, patronymic, email, phone, login, password);
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
-            return res.json('На вамшу почту было отправлено письмо с подтверждением регистрации');
             return res.json(userData);
+            return res.json('На вамшу почту было отправлено письмо с подтверждением регистрации');
         } catch (e) {
             return res.json(e.message)
         }
@@ -21,10 +21,11 @@ class UserController {
 
     async login(req, res, next) {
         try {
-            const {email, login, password} = req.body;
-            const userData = await userService.login(email, login, password);
+            const {email, login, phone, password} = req.body;
+            const userData = await userService.login(email, login, phone, password);
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
-            return res.json(userData)
+            return res.json(userData.accessToken)
+            return res.json('Вы успешно вошли!');
         } catch (e) {
             return res.json(e.message);
         }

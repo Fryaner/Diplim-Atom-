@@ -61,11 +61,27 @@ class UserService {
         await user.save();
     }
 
-    async login(email, login, password) {
-        const user = await User.findOne({where: {email}});
-        if (!user) {
-            throw ApiError.badRequest('Пользователь не найден')
+    async login(email, login, phone, password) {
+
+        const checks = [
+            { name: 'email', value: email },
+            { name: 'login', value: login },
+            { name: 'phone', value: phone }
+        ];
+    
+        let user;
+    
+        for (const check of checks) {
+            user = await User.findOne({ where: { [check.name]: check.value } });
+            if (user) {
+                break; 
+            }
         }
+    
+        if (!user) {
+            throw ApiError.badRequest('Пользователь не найден');
+        }
+    
         const isPassEquals = await bcrypt.compare(password, user.password);
         if (!isPassEquals) {
             throw ApiError.badRequest('Некорректный пароль');
