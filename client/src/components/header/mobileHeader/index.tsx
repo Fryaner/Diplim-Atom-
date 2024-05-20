@@ -51,7 +51,7 @@ const Mobileheader = () => {
                             </Button>
                         </div> : 
                         <div className="flex flex-1 justify-between">
-                            <div className="flex gap-[16px]">                         
+                            <div className="flex gap-2">                         
                                 <User/>
                                 <Favorite/>
                             </div>
@@ -133,7 +133,7 @@ const Mobileheader = () => {
                             </Link>
                         </div>
                         <div className="flex flex-col items-center gap-[3px]">
-                            <Link className="flex flex-col items-center gap-[3px]" to="/">
+                            <Link className="flex flex-col items-center gap-[3px]" to="/lc">
                                 <CircleUserRound/>
                                 <p>Профиль</p>
                             </Link>

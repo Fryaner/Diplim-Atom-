@@ -30,7 +30,7 @@ const Header = () => {
             </div>
         </div>
     </div>
-                    <div className="flex items-center max-w-[1440px] m-auto gap-[35px] py-[21px] px-[16px]">
+                    <div className="flex items-center max-w-[1440px] m-auto gap-[35px] py-[24px] px-[16px]">
                         <div className="flex gap-[4px]">
                             <Logo/>
                         </div>

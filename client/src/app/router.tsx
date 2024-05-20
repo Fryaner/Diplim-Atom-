@@ -3,6 +3,11 @@ import App from "./app";
 import StartPage from "../pages/startPage";
 import { RegisterForm } from "../modules/register";
 import { AuthorizationForm } from "../modules/authorization";
+import LkLayout from "../modules/lc/components/lcLayout";
+import Redirect from "../modules/redirect";
+import LcUser from "../modules/lc/components/lcUser";
+
+
 export const router = createBrowserRouter([
     {
         path: '',
@@ -19,6 +24,16 @@ export const router = createBrowserRouter([
             {
                 path: 'auth',
                 element: <AuthorizationForm/>
+            },
+            {
+                path: 'lc',
+                element: <Redirect><LkLayout/></Redirect>,
+                children: [
+                    {
+                        path: '',
+                        element: <LcUser/>
+                    }
+                ]
             }
         ]
     }

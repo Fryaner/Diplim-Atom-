@@ -2,25 +2,28 @@ import mainApi from '../../../store/mainApi';
 import { UserModel } from '../../../models/userModel';
 import { RegisterModel } from '../../../models/registerModel';
 
-const registerApi = mainApi.injectEndpoints({
+const authorizationApi = mainApi.injectEndpoints({
     endpoints: (build) => ({
-        getAllUsers: build.query<UserModel[], void>({
-            query: () => 'user'
-        }),
-        addUser: build.mutation<RegisterModel, UserModel>({
+        login: build.mutation<RegisterModel, UserModel>({
             query: (body) => ({
-                url: 'user/registration',
+                url: 'user/login',
                 method: 'POST',
                 body: body,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             })
+        }),
+        logout: build.mutation<string, void>({
+            query: () => ({
+                url: 'user/logout',
+                method: 'POST',
+            })
         })
     }),
 })
 
 export const { 
-    useGetAllUsersQuery, 
-    useAddUserMutation 
-} = registerApi;
+    useLoginMutation,
+    useLogoutMutation,
+} = authorizationApi;

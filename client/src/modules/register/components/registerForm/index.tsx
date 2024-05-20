@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "../../../../UI/Button";
 import { Input } from "../../../../UI/Input";
 import { useForm } from "react-hook-form"
@@ -15,11 +15,18 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useAddUserMutation } from "../../api/registerApi";
 import { Spinner } from "@radix-ui/themes";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { isSetAuth } from "../../../../store/authSlice";
+import { UserModel } from "../../../../models/userModel";
 
 
 export const RegisterForm = () => {
     const [addUser, {data, isLoading, isError}] = useAddUserMutation();
 
+    const dispatch = useDispatch();
+
+    const navigate = useNavigate();
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
@@ -45,6 +52,27 @@ export const RegisterForm = () => {
             password: values.password,
         })
     }
+
+    useEffect(() => {
+        if (data?.accessToken) {
+            dispatch(isSetAuth(true));
+            const user: UserModel = {
+                lastName: data.user.lastName,
+                firstName: data.user.firstName,
+                patronymic: data.user.patronymic,
+                login: data.user.login,
+                password: data.user.password,
+                email: data.user.email,
+                phone: data.user.phone,
+                isActivated: data.user.isActivated,
+                createdAt: data.user.createdAt,
+            }
+            localStorage.setItem('isAuth', 'true');
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('token', data.accessToken);
+            navigate('/lc');
+        }
+    })
 
     return (
         <div className="flex flex-col items-center gap-2 py-[16px] max-md:px-[16px]">
@@ -184,7 +212,7 @@ export const RegisterForm = () => {
                 <NavLink to="../auth" className="underline text-[#8761D9]">Уже есть аккаунт?</NavLink>
             </div>
             <div>
-                {isLoading ? <Spinner/> : isError ? <p>Ошибка</p> : data}
+                {isLoading ? <Spinner/> : isError ? <p>Ошибка</p> : data?.message}
             </div>
         </div>
     )
