@@ -44,9 +44,11 @@ class UserService {
         return {
             ...tokens,
             user: {
-                email: user.email, 
+                email: user.email,
+                phone: user.phone, 
                 lastName: user.lastName, 
                 firstName: user.firstName,
+                patronymic: user.patronymic,
                 login: user.login,
                 password: user.password,
             }
@@ -105,11 +107,15 @@ class UserService {
         return {
             ...tokens,
             user: {
-                email: user.email, 
+                email: user.email,
+                phone: user.phone, 
                 lastName: user.lastName, 
                 firstName: user.firstName,
+                patronymic: user.patronymic,
                 login: user.login,
                 password: user.password,
+                isActivated: user.isActivated,
+                createdAt: user.createdAt,
             }
         }
     }
