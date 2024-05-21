@@ -10,6 +10,7 @@ router.post('/registration',
     body('password', 'Длина пароля должны быть не меньше 3 символов').isLength({min: 3, max: 32}),
     userController.registration);
 router.post('/login', userController.login);
+router.patch('/edit', userController.edit);
 router.post('/logout', userController.logout);
 router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh);

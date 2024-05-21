@@ -29,6 +29,16 @@ class UserController {
         }
     }
 
+    async edit(req,res) {
+        try {
+            const {id, email, login, phone,  lastName, firstName, patronymic, password, newPassword, isActivated} = req.body;
+            const editUser = await userService.edit(id, email, login, phone,  lastName, firstName, patronymic, password, newPassword, isActivated);
+            return res.json(editUser);
+        } catch (e) {
+            return res.json({message: e.message});
+        }
+    }
+
     async logout(req, res, next) {
         try {
             const {refreshToken} = req.cookies;

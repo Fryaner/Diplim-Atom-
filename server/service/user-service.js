@@ -44,6 +44,7 @@ class UserService {
         return {
             ...tokens,
             user: {
+                id: user.id,
                 email: user.email,
                 phone: user.phone, 
                 lastName: user.lastName, 
@@ -51,6 +52,8 @@ class UserService {
                 patronymic: user.patronymic,
                 login: user.login,
                 password: user.password,
+                isActivated: user.isActivated,
+                createdAt: user.createdAt,
             }
         }
     }
@@ -107,6 +110,7 @@ class UserService {
         return {
             ...tokens,
             user: {
+                id: user.id,
                 email: user.email,
                 phone: user.phone, 
                 lastName: user.lastName, 
@@ -206,6 +210,37 @@ class UserService {
         const roles = await Role.findAll();
         return roles;
     }
+
+    async edit(id, email, login, phone,  lastName, firstName, patronymic, password, newPassword, isActivated) {
+        const currentDataUser = await User.findOne({where: {id}});
+        if (email) {
+            if (email === currentDataUser.email) {
+                throw new Error('Почта уже привязана к данному аккаунту');
+            }
+            const isEmail = await User.findOne({where: {email}});
+            if (isEmail) {
+                throw new Error('Почта уже привязана в какому-то аккаунту');
+            }
+            const activationLink = uuid.v4();
+            await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`);
+            const editUserEmail = await User.update({email, isActivated, activationLink},{where: {id}});
+        }
+        if (newPassword) {
+            const isPassEquals = await bcrypt.compare(password, currentDataUser.password);
+            if (password === newPassword && isPassEquals) {
+                throw new Error('У вас уже имеется данный пароль');
+            }
+            if (!isPassEquals) {
+                throw new Error('Вы ввели не верный старый пароль');
+            }
+            const hashPassword = await bcrypt.hash(newPassword, 3);
+            const editUserPassword = await User.update({password: hashPassword},{where: {id}});
+        }
+        const editUser = await User.update({lastName, firstName, patronymic, phone, login},{where: {id}});
+        const EditCurrentDataUser = await User.findOne({where: {id}});
+        return EditCurrentDataUser;
+    }
+
 }
 
 module.exports = new UserService();
