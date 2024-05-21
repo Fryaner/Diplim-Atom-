@@ -11,7 +11,7 @@ const Footer = () => {
     const [isActiveCompany, isSetActiveCompany] = useState(false);
     const [isActiveService, isSetActiveService] = useState(false);
     return (
-        <footer className="bg-[#8761D9]/[50%]">
+        <footer className="bg-[#8761D9]/[50%] my-4">
             <div className="flex flex-col gap-[16px] max-w-[1440px] m-auto max-md:pb-[90px] p-[16px]">
             <Logo/>
             <div className="flex justify-between max-md:flex-col-reverse gap-[32px]">

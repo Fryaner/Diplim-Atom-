@@ -1,5 +1,5 @@
 export interface UserModel {
-    id?: string,
+    id?: number,
     lastName?: string,
     firstName?: string,
     patronymic?: string,
@@ -9,4 +9,6 @@ export interface UserModel {
     password?: string,
     isActivated?: boolean,
     createdAt?: string,
+    message?: string,
+    newPassword?: string,
 }

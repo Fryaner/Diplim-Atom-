@@ -12,11 +12,12 @@ const User = () => {
     const userJson = localStorage.getItem('user');
     const user: UserModel = userJson ? JSON.parse(userJson) : null;
     const loginLength = user?.login ? user?.login.length : 0;
-
+    const isEditLogin = useSelector((state: RootState) => state.auth.isEditLogin);
     useEffect(() => {
 
-    }, [isAuth]);
+    }, [isAuth, isEditLogin]);
 
+    console.log(isAuth)
     return (
         <>
             <MediaQuery minWidth={768}>

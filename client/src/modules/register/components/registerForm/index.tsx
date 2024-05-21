@@ -45,7 +45,7 @@ export const RegisterForm = () => {
         addUser({
             firstName: values.firstName,
             lastName: values.lastName,
-            patronymic: values.lastName,
+            patronymic: values.patronymic,
             phone: values.phone,
             email: values.email,
             login: values.login,
@@ -57,6 +57,7 @@ export const RegisterForm = () => {
         if (data?.accessToken) {
             dispatch(isSetAuth(true));
             const user: UserModel = {
+                id: data.user.id,
                 lastName: data.user.lastName,
                 firstName: data.user.firstName,
                 patronymic: data.user.patronymic,
@@ -205,7 +206,7 @@ export const RegisterForm = () => {
                         />  
                     </div>
                 </div>
-                <Button className="bg-[#8761D9]">Зарегистрироваться</Button>
+                <Button className="bg-[#5129A5]">Зарегистрироваться</Button>
             </form>
             </Form>
             <div>

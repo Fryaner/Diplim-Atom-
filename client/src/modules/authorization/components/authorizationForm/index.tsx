@@ -25,12 +25,14 @@ export const AuthorizationForm = () => {
 
     const dispatch = useDispatch();
 
-
     const navigate = useNavigate();
     useEffect(() => {
         localStorage.removeItem('token');
+        dispatch(isSetAuth(false));
+        localStorage.setItem('isAuth','false');
         if (data?.accessToken) {
             const user: UserModel = {
+                id: data.user.id,
                 lastName: data.user.lastName,
                 firstName: data.user.firstName,
                 patronymic: data.user.patronymic,
@@ -102,7 +104,7 @@ export const AuthorizationForm = () => {
                         />  
                     </div>
                 </div>
-                <Button className="bg-[#8761D9]">Войти</Button>
+                <Button className="bg-[#5129A5]">Войти</Button>
             </form>
             </Form>
             <div className="flex gap-4">
