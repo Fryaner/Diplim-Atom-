@@ -37,10 +37,11 @@ const EditEmailForm = () => {
             toast({
                title: "Ошибка при изменении почты",
                description: data?.message,
-               action: <ToastAction altText="Ещё раз">Ещё раз</ToastAction>,
-         }) : toast({
-           description: <p>Вы успешно изменили почту.</p>,
-         })
+               action: <X color="red"/>,
+         }) :             toast({
+            title: "Вы успешно сменили почту",
+            action: <Check color="lime"/>,
+        })
             setShowCheck(true);
             setTimeout(() => {
                 setShowCheck(false);
@@ -102,7 +103,9 @@ const EditEmailForm = () => {
                                     <div className="flex flex-1">
                                         <Input placeholder="Например: example.example@mail.ru" {...field} defaultValue="email"/>
                                         <Button type="submit" className="rounded-none rounded-r-lg">
-                                            {isLoading ? <p><Spinner/></p> : isError ? <p>Err</p> : showCheck ? <Check color="lime"/> : <Pencil/>}
+                                            {isLoading ? <p><Spinner/></p> : 
+                                                isError ? <p>Err</p> : 
+                                                    showCheck ? data?.message ? <X color="red"/> : <Check color="lime"/> : <Pencil/>}
                                         </Button>
                                     </div>
                                 </div>

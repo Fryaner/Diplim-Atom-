@@ -16,7 +16,7 @@ import { Spinner } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import { UserModel } from "../../../../../models/userModel";
 import { useEditUserMutation } from "../../../api";
-import { Check, Pencil } from "lucide-react";
+import { Check, Pencil, X } from "lucide-react";
 import { useToast } from "../../../../../UI/UseToast";
 import { ToastAction } from "../../../../../UI/Toast";
 import { useDispatch } from "react-redux";
@@ -34,11 +34,12 @@ const EditLoginForm = () => {
         if (isSuccess) {
             data?.message ?
             toast({
-               title: "Ошибка при изменении логина",
-               description: data?.message,
-               action: <ToastAction altText="Ещё раз">Ещё раз</ToastAction>,
-         }) : toast({
-           description: <p>Вы успешно изменили логин.</p>,
+                title: "Ошибка при изменении логина",
+                description: data?.message,
+                action: <X color="red"/>,
+          }) :             toast({
+             title: "Вы успешно сменили логин",
+             action: <Check color="lime"/>,
          })
             setShowCheck(true);
             setTimeout(() => {
@@ -98,7 +99,9 @@ const EditLoginForm = () => {
                                     <div className="flex flex-1">
                                         <Input placeholder="Логин" {...field} defaultValue="login"/>
                                         <Button type="submit" className="rounded-none rounded-r-lg">
-                                            {isLoading ? <p><Spinner/></p> : isError ? <p>Err</p> : showCheck ? <Check color="lime"/> : <Pencil/>}
+                                        {isLoading ? <p><Spinner/></p> : 
+                                                isError ? <p>Err</p> : 
+                                                    showCheck ? data?.message ? <X color="red"/> : <Check color="lime"/> : <Pencil/>}
                                         </Button>
                                     </div>
                                 </div>

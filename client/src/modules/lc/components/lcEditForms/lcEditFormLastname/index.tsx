@@ -16,7 +16,7 @@ import { Spinner } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import { UserModel } from "../../../../../models/userModel";
 import { useEditUserMutation } from "../../../api";
-import { Check, Pencil } from "lucide-react";
+import { Check, Pencil, X } from "lucide-react";
 import { ToastAction } from "../../../../../UI/Toast";
 import { useToast } from "../../../../../UI/UseToast";
 import { isSetEditLogin } from "../../../../../store/authSlice";
@@ -31,11 +31,12 @@ const EditLastNameForm = () => {
         if (isSuccess) {
             data?.message ?
             toast({
-               title: "Ошибка при изменении фамилии",
-               description: data?.message,
-               action: <ToastAction altText="Ещё раз">Ещё раз</ToastAction>,
-         }) : toast({
-           description: <p>Вы успешно изменили фамилию.</p>,
+                title: "Ошибка при изменении фамилии",
+                description: data?.message,
+                action: <X color="red"/>,
+          }) :             toast({
+             title: "Вы успешно сменили фамилию",
+             action: <Check color="lime"/>,
          })
             setShowCheck(true);
             setTimeout(() => {
@@ -83,7 +84,9 @@ const EditLastNameForm = () => {
                                     <div className="flex flex-1">
                                         <Input placeholder="Фамилия" {...field} defaultValue="lastname"/>
                                         <Button type="submit" className="rounded-none rounded-r-lg">
-                                            {isLoading ? <p><Spinner/></p> : isError ? <p>Err</p> : showCheck ? <Check color="lime"/> : <Pencil/>}
+                                        {isLoading ? <p><Spinner/></p> : 
+                                                isError ? <p>Err</p> : 
+                                                    showCheck ? data?.message ? <X color="red"/> : <Check color="lime"/> : <Pencil/>}
                                         </Button>
                                     </div>
                                 </div>

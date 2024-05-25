@@ -20,6 +20,7 @@ import { Checkbox } from "../../../../../UI/Checkbox";
 import { Label } from "../../../../../UI/Label";
 import { useToast } from "../../../../../UI/UseToast"
 import { ToastAction } from "@radix-ui/react-toast";
+import { Check, X } from "lucide-react";
 
 
 const EditFormPassword = () => {
@@ -32,14 +33,14 @@ const EditFormPassword = () => {
     useEffect(() => {
         if (isSuccess) {
             data?.message ?
-                 toast({
-                    title: "Ошибка при изменении пароля",
-                    description: data?.message,
-                    action: <ToastAction altText="Ещё раз">Ещё раз</ToastAction>,
-              }) : toast({
-                description: <p>Вы успешно изменили пароль.</p>,
-              })
-        
+            toast({
+                title: "Ошибка при изменении пароля",
+                description: data?.message,
+                action: <X color="red"/>,
+          }) :             toast({
+             title: "Вы успешно сменили пароль",
+             action: <Check color="lime"/>,
+         })
             setShowCheck(true);
             let timer = setTimeout(() => {
                 setShowCheck(false);
@@ -143,7 +144,8 @@ const EditFormPassword = () => {
                         />
                         </div>
                     </div>
-                        <Button>{isLoading ? <Spinner/> : isError ? <p>Error</p> : <p>Изменить пароль</p>}</Button>
+                        <Button>{isLoading ? <Spinner/> : isError ? <p>Error</p> : <p>Изменить пароль</p>}
+                        </Button>
             </form>
             </Form>
             : <></>
