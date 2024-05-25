@@ -225,6 +225,24 @@ class UserService {
             await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`);
             const editUserEmail = await User.update({email, isActivated, activationLink},{where: {id}});
         }
+        if (phone) {
+            if (phone === currentDataUser.phone) {
+                throw new Error('Телефон уже привязан к данному аккаунту');
+            }
+            const isPhone = await User.findOne({where: {phone}});
+            if (isPhone) {
+                throw new Error('Телефон уже привязан в какому-то аккаунту');
+            }
+        }
+        if (login) {
+            if (login === currentDataUser.login) {
+                throw new Error('Логин уже привязан к данному аккаунту');
+            }
+            const isLogin = await User.findOne({where: {login}});
+            if (isLogin) {
+                throw new Error('Логин уже привязан к какому-то аккаунту');
+            }
+        }
         if (newPassword) {
             const isPassEquals = await bcrypt.compare(password, currentDataUser.password);
             if (password === newPassword && isPassEquals) {
