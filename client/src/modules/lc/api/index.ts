@@ -9,8 +9,15 @@ const apiEditUser = mainApi.injectEndpoints({
                 method: 'PATCH',
                 body: body,
             })
+        }),
+        deleteUser: build.mutation<UserModel, UserModel>({
+            query: (body) => ({
+                url: 'user/delete',
+                method: 'POST',
+                body: body,
+            })
         })
     })
 })
 
-export const { useEditUserMutation } = apiEditUser; 
+export const { useEditUserMutation, useDeleteUserMutation } = apiEditUser; 

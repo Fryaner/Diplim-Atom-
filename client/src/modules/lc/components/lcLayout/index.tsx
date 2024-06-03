@@ -2,17 +2,61 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import { useLogoutMutation } from "../../../authorization/api/authorizationApi";
 import { useDispatch } from "react-redux";
 import { isSetAuth } from "../../../../store/authSlice";
-import { useState } from "react";
-import { ChevronDown, ChevronRight, ChevronUp, LogOut, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Check, ChevronDown, ChevronRight, ChevronUp, LogOut, Trash2, X } from "lucide-react";
 import { Button } from "../../../../UI/Button";
 import { Separator } from "../../../../UI/Separator";
 import MediaQuery from "react-responsive";
+import { useDeleteUserMutation } from "../../api";
+import { UserModel } from "../../../../models/userModel";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "../../../../UI/Dialog"
+import { Label } from "../../../../UI/Label";
+import { Input } from "../../../../UI/Input";
+import { useToast } from "../../../../UI/UseToast";
 
 const LkLayout = () => {
+    const userJson = localStorage.getItem('user');
+    const user: UserModel = userJson ? JSON.parse(userJson) : null;
     const [logoutUser] = useLogoutMutation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isActiveMenuLc, isSetActiveMenuLc] = useState(false);
+    const [isPassword, isSetPassword] = useState('');
+    const [deleteUser, {data, isLoading, isError}] = useDeleteUserMutation();
+    const {toast} = useToast();
+
+    const deleteUserFunction = () => {
+            deleteUser({
+                id: user.id,
+                password: isPassword,
+        })
+    }
+
+    useEffect(() => {
+        if (data && !data.message) {
+            toast({
+                title: "Удаление аккаунта",
+                description: "Вы успешно удалили аккаунт!",
+                action: <Check color="green"/>
+            })
+            logoutFunction();
+        } else if (data){
+            toast({
+                title: "Удаление аккаунта",
+                description: data?.message,
+                action: <X color="red"/>
+            })
+        }
+    }, [data])
+
     const logoutFunction = () => {
         dispatch(isSetAuth(false));
         localStorage.setItem('isAuth', 'false');
@@ -56,7 +100,24 @@ const LkLayout = () => {
                     </li>
                 </ul>
                 <div className="flex flex-col gap-2">
-                    <Button className="bg-[red] flex gap-2">Удалить аккаунт<Trash2 className="w-5"/></Button>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button className="bg-[red] flex gap-2">Удалить аккаунт<Trash2 className="w-5"/></Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle>Удаление аккаунта</DialogTitle>
+                            <DialogDescription>Для удаления аккаунта необходимо ввести пароль.</DialogDescription>
+                        </DialogHeader>
+                        <div className="flex flex-col gap-2">
+                            <Label>Введите пароль для удаления аккаунта</Label>
+                            <Input type="password" onChange={(e) => isSetPassword(e.target.value)} id="password"/>
+                        </div>
+                        <DialogFooter className="flex flex-col">
+                            <Button className="bg-[red] flex gap-2" onClick={deleteUserFunction}>Удалить аккаунт<Trash2 className="w-5"/></Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
                     <Button className="bg-[#5129A5] flex gap-2" onClick={logoutFunction}>Выйти<LogOut className="w-5"/></Button>
                 </div>
             </nav>
@@ -86,7 +147,24 @@ const LkLayout = () => {
                     </li>
                 </ul>
                 <div className="flex flex-col gap-2">
-                <Button className="bg-[red] flex gap-2">Удалить аккаунт<Trash2 className="w-5"/></Button>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button className="bg-[red] flex gap-2">Удалить аккаунт<Trash2 className="w-5"/></Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle>Удаление аккаунта</DialogTitle>
+                            <DialogDescription>Для удаления аккаунта необходимо ввести пароль.</DialogDescription>
+                        </DialogHeader>
+                        <div className="flex flex-col gap-2">
+                            <Label>Введите пароль для удаления аккаунта</Label>
+                            <Input type="password" onChange={(e) => isSetPassword(e.target.value)} id="password"/>
+                        </div>
+                        <DialogFooter className="flex flex-col">
+                            <Button className="bg-[red] flex gap-2" onClick={deleteUserFunction}>Удалить аккаунт<Trash2 className="w-5"/></Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
                     <Button className="bg-[#5129A5] flex gap-2" onClick={logoutFunction}>Выйти<LogOut className="w-5"/></Button>
                 </div>
             </nav>

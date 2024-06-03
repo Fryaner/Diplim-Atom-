@@ -19,7 +19,6 @@ import { useEditUserMutation } from "../../../api";
 import { Checkbox } from "../../../../../UI/Checkbox";
 import { Label } from "../../../../../UI/Label";
 import { useToast } from "../../../../../UI/UseToast"
-import { ToastAction } from "@radix-ui/react-toast";
 import { Check, X } from "lucide-react";
 
 

@@ -6,6 +6,8 @@ import { AuthorizationForm } from "../modules/authorization";
 import LkLayout from "../modules/lc/components/lcLayout";
 import Redirect from "../modules/redirect";
 import LcUser from "../modules/lc/components/lcUser";
+import LcResetPassword from "../modules/lc/components/lcResetPassword";
+import CatalogMouse from "../modules/catalog/components/catalogMouse";
 
 
 export const router = createBrowserRouter([
@@ -34,6 +36,14 @@ export const router = createBrowserRouter([
                         element: <LcUser/>
                     }
                 ]
+            }, 
+            {
+                path: 'resetPassword',
+                element: <LcResetPassword/>
+            },
+            {
+                path: 'test',
+                element: <CatalogMouse/>
             }
         ]
     }

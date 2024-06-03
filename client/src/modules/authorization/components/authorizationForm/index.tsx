@@ -109,7 +109,7 @@ export const AuthorizationForm = () => {
             </Form>
             <div className="flex gap-4">
                 <NavLink to="../register" className="underline text-[#8761D9]">Нет аккаунта?</NavLink>
-                <NavLink to="../auth" className="underline text-[#8761D9]">Забыли пароль?</NavLink>
+                <NavLink to="../resetPassword" className="underline text-[#8761D9]">Забыли пароль?</NavLink>
             </div>
             <div>
                 {isLoading ? <Spinner/> : isError ? <p>Ошибка</p> : data?.message}
