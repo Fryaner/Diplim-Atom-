@@ -9,6 +9,7 @@ router.post('/registration',
     body('email', 'Введите коректный адресс элекронной почты').isEmail(),
     body('password', 'Длина пароля должны быть не меньше 3 символов').isLength({min: 3, max: 32}),
     userController.registration);
+router.post('/delete', userController.delete)
 router.post('/login', userController.login);
 router.patch('/edit', userController.edit);
 router.post('/logout', userController.logout);

@@ -18,6 +18,16 @@ class UserController {
         }
     }
 
+    async delete(req, res, next) {
+        try {
+            const {id, password} = req.body;
+            const deleteUser = await userService.delete(id, password);
+            return res.json(deleteUser);
+        } catch (e) {
+            return res.json({message: e.message});
+        }
+    }
+
     async login(req, res, next) {
         try {
             const {email, login, phone, password} = req.body;

@@ -7,12 +7,11 @@ const ApiError = require('../error/apiError');
 class DeviceController {
     async create(req, res, next) {
         try {
-            let {name, price, typeId, brandId, info} = req.body;
+            let {model, price, typeId, brandId, info} = req.body;
             const {image} = req.files; 
             let fileName = uuid.v4() + ".jpg";
             image.mv(path.resolve(__dirname, '..', 'static', fileName));
-
-            const device = await Device.create({name, price, typeId, brandId, image: fileName});
+            const device = await Device.create({model, price, typeId, brandId, image: fileName});
 
             if (info) {
                 info = JSON.parse(info)
@@ -32,9 +31,9 @@ class DeviceController {
     }
 
     async update(req, res) {
-        let {name, price, typeId, brandId, info, id} = req.body;
+        let {model, price, typeId, brandId, info, id} = req.body;
 
-        const deviceUpd = await Device.update({name, price, typeId, brandId}, {where: {id}});
+        const deviceUpd = await Device.update({model, price, typeId, brandId}, {where: {id}});
         return res.json(deviceUpd);
     }
 

@@ -6,7 +6,6 @@ const uuid = require('uuid');
 const mailService = require('./mail-service');
 const tokenService = require('./token-service');
 const ApiError = require('../error/apiError');
-const { where } = require('sequelize');
 
 class UserService {
     async registration(lastName, firstName, patronymic, email, phone, login, password) {
@@ -57,6 +56,17 @@ class UserService {
             }
         }
     }
+
+    async delete(id, password) {
+        const currentDataUser = await User.findOne({where: {id}});
+        const isPassEquals = await bcrypt.compare(password, currentDataUser.password);
+        if (!isPassEquals) {
+            throw new Error('Вы ввели не верный пароль');
+        }
+        const deleteUser = await User.destroy({where: {id}});
+        return deleteUser;
+    }
+
     async activate(activation) {
         const user = await User.findOne({where: {activationLink: activation}});
         if (!user) {

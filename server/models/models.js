@@ -65,9 +65,9 @@ const Device = sequelize.define(
     'device',
     {
         id:{type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true},
-        name:{type: DataTypes.STRING, allowNull: false},
+        model:{type: DataTypes.STRING, allowNull: false},
         image:{type: DataTypes.STRING},
-        raiting:{type: DataTypes.INTEGER, defaultValue: 0, allowNull: false},
+        rating:{type: DataTypes.INTEGER, defaultValue: 0, allowNull: false},
         price:{type: DataTypes.INTEGER, allowNull: false},
     }
 )
