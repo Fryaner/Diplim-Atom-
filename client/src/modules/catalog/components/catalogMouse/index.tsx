@@ -41,7 +41,7 @@ const CatalogMouse = () => {
                     {isLoading ? <Spinner/> : isError ? <p>Err</p> : data?.rows.map((device) => 
                         dataBrands?.filter((brand) => brand.id === device.brandId).map((brand) => 
                             dataTypes?.filter((types) => types.id === device.typeId).map((types) => 
-                            <CardDevice image={device.image} model={device.model} price={device.price} brand={brand.name} type={types.name}/>
+                            <CardDevice rating={device.rating} image={device.image} model={device.model} price={device.price} brand={brand.name} type={types.name}/>
                         )
                         )
                     )}

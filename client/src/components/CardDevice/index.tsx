@@ -12,7 +12,11 @@ interface CardDeviceProps {
     price?: number;
 }
 
-const CardDevice:FC<CardDeviceProps> = ({model, image, descriptionImage, rating, price , brand, type}) => {
+
+const CardDevice:FC<CardDeviceProps> = ({model, image, descriptionImage, rating = 5, price , brand, type}) => {
+
+    const starElements = Array.from({ length: 5 }, (_, index) => index < rating);
+
     return (
             <div className="flex flex-col w-[23%] max-xl:w-[31%] border p-4 gap-4 rounded justify-between">
                 <div>
@@ -30,16 +34,14 @@ const CardDevice:FC<CardDeviceProps> = ({model, image, descriptionImage, rating,
                             </NavLink>
                         <p className="flex items-center">{price} <RussianRuble className="w-4 h-4"/></p>
                         <div className="flex">
-                            <Star className="fill-[orange]"/>
-                            <Star className="fill-[orange]"/>
-                            <Star className="fill-[orange]"/>
-                            <Star className="fill-[orange]"/>
-                            <Star/>
+                        {starElements.map((isFilled, index) => (
+                            <Star key={index} className={isFilled ? "fill-[orange]" : "fill-[white]"} />
+                            ))}
                         </div>
                     </div>
                 </div>
                 <Button className="bg-[#5129A5] flex gap-2 items-center">
-                    <p>Купить</p>
+                    <p>Добавить в корзину</p>
                     <ShoppingBasket className="w-5"/>
                 </Button>
             </div>
