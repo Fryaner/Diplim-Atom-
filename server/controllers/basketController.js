@@ -32,8 +32,18 @@ class BasketController {
             return res.json(e)
         }
     }
+    
+    async reduceDevice(req, res) {
+        try {
+            const {id, basketId} = req.body;
+            const basketUser = await BasketDevice.destroy({where: {id, basketId}});
+            return res.json(basketUser);
+        } catch(e) {
+            return res.json(e)
+        }
+    }
 
-    async delete(req, res) {
+    async deleteBasket(req, res) {
         try {
             const {userId} = req.body;
             const basketUser = await Basket.destroy({where: {userId}});
@@ -43,10 +53,20 @@ class BasketController {
         }
     }
 
-    async getOne(req, res) {
+    async getOneBasketDevice(req, res) {
         try {
-            const {basketId} = req.body;
-            const basketUser = await BasketDevice.findOne({where: {basketId}});
+            const {basketId} = req.params;
+            const basketDeviceUser = await BasketDevice.findAll({where: {basketId}});
+            return res.json(basketDeviceUser);
+        } catch(e) {
+            return res.json(e)
+        }
+    }
+
+    async getOneBasket(req, res) {
+        try {
+            const {userId} = req.body;
+            const basketUser = await Basket.findOne({where: {userId}});
             return res.json(basketUser);
         } catch(e) {
             return res.json(e)
