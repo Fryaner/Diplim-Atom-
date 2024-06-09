@@ -13,7 +13,7 @@ import {
     FormMessage,
   } from "../../../../UI/Form/index";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useAddUserMutation } from "../../api/registerApi";
+import { useAddUserMutation, useCreateBasketMutation } from "../../api/registerApi";
 import { Spinner } from "@radix-ui/themes";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -23,6 +23,7 @@ import { UserModel } from "../../../../models/userModel";
 
 export const RegisterForm = () => {
     const [addUser, {data, isLoading, isError}] = useAddUserMutation();
+    const [createBasket, {data: basketData}] = useCreateBasketMutation();
 
     const dispatch = useDispatch();
 
@@ -41,16 +42,30 @@ export const RegisterForm = () => {
         },
       })
 
-    function onSubmit(values: z.infer<typeof registerSchema>) {
-        addUser({
-            firstName: values.firstName,
-            lastName: values.lastName,
-            patronymic: values.patronymic,
-            phone: values.phone,
-            email: values.email,
-            login: values.login,
-            password: values.password,
-        })
+    async function onSubmit(values: z.infer<typeof registerSchema>) {
+        try {
+            const registerResult = await addUser({
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    patronymic: values.patronymic,
+                    phone: values.phone,
+                    email: values.email,
+                    login: values.login,
+                    password: values.password,
+            }).unwrap();
+    
+            if (registerResult?.user?.id) {
+                const createBasketResult = await createBasket({
+                    userId: registerResult.user.id
+                }).unwrap();
+                if (createBasketResult) {
+                    localStorage.setItem('basketId', createBasketResult.id.toString());
+                }
+            }
+        } catch (error) {
+            console.error('Ошибка при выполнении запросов:', error);
+        }
+
     }
 
     useEffect(() => {

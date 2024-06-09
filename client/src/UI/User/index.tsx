@@ -21,11 +21,9 @@ const User = () => {
     return (
         <>
             <MediaQuery minWidth={768}>
-                <Button className="w-[24px] h-[24px]" variant="link">
-                    <NavLink to="lc">
+                    <NavLink className="h-[24px]" to="lc">
                         {localStorage.getItem('isAuth') === 'true' ? `${loginLength > 10 ? `${user?.login?.slice(0, 6)}...` : user?.login}` : <CircleUserRound/>}
                     </NavLink>
-                </Button>
             </MediaQuery>
             <MediaQuery maxWidth={768}>
                 <NavLink to="lc">

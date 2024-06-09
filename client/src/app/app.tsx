@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 const App = () => {
     let [isLoading, setIsLoading] = useState(false);
-
     useEffect(() => {
         setTimeout(() => {
           setIsLoading(true);

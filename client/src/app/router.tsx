@@ -8,6 +8,7 @@ import Redirect from "../modules/redirect";
 import LcUser from "../modules/lc/components/lcUser";
 import LcResetPassword from "../modules/lc/components/lcResetPassword";
 import CatalogMouse from "../modules/catalog/components/catalogMouse";
+import Basket from "../modules/basket/components";
 
 
 export const router = createBrowserRouter([
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
             {
                 path: 'auth',
                 element: <AuthorizationForm/>
+            },
+            {
+                path: 'basket',
+                element: <Basket/>
             },
             {
                 path: 'lc',

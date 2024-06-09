@@ -1,4 +1,3 @@
-import { RussianRuble} from "lucide-react";
 import CatalogPopUp from "./catalogPopUp";
 import MediaQuery from 'react-responsive'
 import InputSearch from "../../UI/InputSearch";
@@ -7,7 +6,7 @@ import Favorite from "../../UI/Favorite";
 import Basket from "../../UI/Basket";
 import User from "../../UI/User";
 import Mobileheader from "./mobileHeader";
-import { NavLink } from "react-router-dom";
+import {NavLink } from "react-router-dom";
 
 
 const Header = () => {
@@ -38,17 +37,13 @@ const Header = () => {
                             <CatalogPopUp/>
                             <InputSearch/>
                         </div>
-                        <div className="flex items-center gap-[16px]">
-                            <div className="flex gap-[24px]">
+                        <div className="flex items-center">
+                            <div className="flex gap-4">
                                 <User/>
-                                <div className="flex gap-[16px]">
+                                <div className="flex gap-2">
                                     <Favorite/>
                                     <Basket/>
                                 </div>
-                            </div>
-                            <div className="flex items-center gap-[3px]">
-                                <p className="whitespace-nowrap">39 999</p>
-                                <RussianRuble className="w-[16px] h-[16px]"/>
                             </div>
                         </div>
                     </div>

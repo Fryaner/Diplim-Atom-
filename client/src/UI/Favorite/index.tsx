@@ -1,11 +1,10 @@
-import { Button } from "../../UI/Button";
 import {Star} from "lucide-react";
-
+import { Link } from "react-router-dom";
 const Favorite = () => {
     return (
-        <Button className="w-[24px] h-[24px]" variant="link" size="icon">
-            <Star/>
-        </Button>
+        <div className="h-[24px]">
+            <Link to="favorite"><Star/></Link>
+        </div>
     )
 }
 

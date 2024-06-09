@@ -19,6 +19,13 @@ const authorizationApi = mainApi.injectEndpoints({
                 url: 'user/logout',
                 method: 'POST',
             })
+        }),
+        getBasket: build.mutation<{id: number}, {userId: number | undefined}>({
+            query: (body) => ({
+                url: 'basket',
+                method: 'POST',
+                body
+            })
         })
     }),
 })
@@ -26,4 +33,5 @@ const authorizationApi = mainApi.injectEndpoints({
 export const { 
     useLoginMutation,
     useLogoutMutation,
+    useGetBasketMutation,
 } = authorizationApi;

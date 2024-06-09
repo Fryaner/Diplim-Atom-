@@ -16,8 +16,15 @@ const apiEditUser = mainApi.injectEndpoints({
                 method: 'POST',
                 body: body,
             })
+        }),
+        deleteBasket: build.mutation<UserModel, {userId: number | undefined}>({
+            query: (body) => ({
+                url: 'basket/delete',
+                method: 'DELETE',
+                body: body,
+            })
         })
     })
 })
 
-export const { useEditUserMutation, useDeleteUserMutation } = apiEditUser; 
+export const { useEditUserMutation, useDeleteUserMutation, useDeleteBasketMutation } = apiEditUser; 

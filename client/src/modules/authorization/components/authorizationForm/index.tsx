@@ -13,7 +13,7 @@ import {
     FormMessage,
   } from "../../../../UI/Form/index";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useLoginMutation } from "../../api/authorizationApi";
+import { useLoginMutation, useGetBasketMutation } from "../../api/authorizationApi";
 import { Spinner } from "@radix-ui/themes";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -21,8 +21,9 @@ import { isSetAuth } from "../../../../store/authSlice";
 import { UserModel } from "../../../../models/userModel";
 
 export const AuthorizationForm = () => {
+    const [getBasket] = useGetBasketMutation();
     const [loginUser, {data, isLoading, isError, }] = useLoginMutation();
-
+    
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
@@ -51,6 +52,7 @@ export const AuthorizationForm = () => {
         }
     }, [data, navigate]);
 
+
     const form = useForm<z.infer<typeof loginScheme>>({
         resolver: zodResolver(loginScheme),
         defaultValues: {
@@ -59,13 +61,26 @@ export const AuthorizationForm = () => {
         },
       })
 
-    function onSubmit(values: z.infer<typeof loginScheme>) {
-        loginUser({
-            email: values.loginAndEmailandPhone,
-            phone: values.loginAndEmailandPhone,
-            login: values.loginAndEmailandPhone,
-            password: values.password,
-        })
+    async function onSubmit(values: z.infer<typeof loginScheme>) {
+        try {
+            const loginResult = await loginUser({
+                email: values.loginAndEmailandPhone,
+                phone: values.loginAndEmailandPhone,
+                login: values.loginAndEmailandPhone,
+                password: values.password,
+            }).unwrap();
+    
+            if (loginResult?.user?.id) {
+                const basketResult = await getBasket({
+                    userId: loginResult.user.id
+                }).unwrap();
+                if (basketResult) {
+                    localStorage.setItem('basketId', basketResult.id.toString());
+                }
+            }
+        } catch (error) {
+            console.error('Ошибка при выполнении запросов:', error);
+        }
     }
     return (
         <div className="flex flex-col items-center gap-2 py-[16px] max-md:px-[16px]">

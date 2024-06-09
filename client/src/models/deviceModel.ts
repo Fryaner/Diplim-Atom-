@@ -1,4 +1,5 @@
 export interface DeviceModel {
+    id: number;
     model: string;
     image: string;
     rating: number;

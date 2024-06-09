@@ -15,6 +15,7 @@ import Favorite from "../../../UI/Favorite";
 import User from "../../../UI/User";
 import { useEffect, useState } from "react";
 import { Separator } from "@radix-ui/themes";
+import Basket from "../../../UI/Basket";
 
 const Mobileheader = () => {
     const [isActiveMenu, isSetActiveMenu] = useState(false);
@@ -37,7 +38,7 @@ const Mobileheader = () => {
                 </Button>
                 <Logo/>
                 <Button className="w-[24px] h-[24px]" variant="link" size="icon">
-                    <ShoppingBasket/>
+                    <Basket/>
                 </Button> 
             </div>
                 <div className={`z-10 overflow-auto absolute bg-white w-[100%] h-lvh ease-in duration-300 flex flex-col gap-[16px] ${isActiveMenu ? "left-[0px]" : 'left-[-1000px]'}`}>
@@ -107,7 +108,7 @@ const Mobileheader = () => {
                     </nav>
                 </div>
         </div>
-        <div className="flex w-[100%] fixed bottom-[0px] bg-white border-t justify-around py-[8px]">
+        <div className="flex w-[100%] fixed bottom-[0px] bg-white border-t justify-around py-4">
                         <div>
                             <Link className="flex flex-col items-center gap-[3px]" to="/">
                                 <Home/>
@@ -121,8 +122,8 @@ const Mobileheader = () => {
                             </Link>
                         </div>
                         <div>
-                            <Link className="flex flex-col items-center gap-[3px]" to="/">
-                                <ShoppingBasket />
+                            <Link className="flex flex-col items-center gap-[3px]" to="basket">
+                                <Basket/>
                                 <p>Корзина</p>
                             </Link>
                         </div>

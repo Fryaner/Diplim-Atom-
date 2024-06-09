@@ -16,11 +16,19 @@ const registerApi = mainApi.injectEndpoints({
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             })
+        }),
+        createBasket: build.mutation<{id: number}, {userId: number | undefined}>({
+            query: (body) => ({
+                url: 'basket/create',
+                method: 'POST',
+                body: body,
+            })
         })
     }),
 })
 
 export const { 
     useGetAllUsersQuery, 
-    useAddUserMutation 
+    useAddUserMutation,
+    useCreateBasketMutation,
 } = registerApi;

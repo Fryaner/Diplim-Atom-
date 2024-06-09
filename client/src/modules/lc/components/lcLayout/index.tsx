@@ -7,7 +7,7 @@ import { Check, ChevronDown, ChevronRight, ChevronUp, LogOut, Trash2, X } from "
 import { Button } from "../../../../UI/Button";
 import { Separator } from "../../../../UI/Separator";
 import MediaQuery from "react-responsive";
-import { useDeleteUserMutation } from "../../api";
+import { useDeleteUserMutation, useDeleteBasketMutation } from "../../api";
 import { UserModel } from "../../../../models/userModel";
 import {
     Dialog,
@@ -31,9 +31,13 @@ const LkLayout = () => {
     const [isActiveMenuLc, isSetActiveMenuLc] = useState(false);
     const [isPassword, isSetPassword] = useState('');
     const [deleteUser, {data, isLoading, isError}] = useDeleteUserMutation();
+    const [deleteBasket] = useDeleteBasketMutation();
     const {toast} = useToast();
 
     const deleteUserFunction = () => {
+            deleteBasket({
+                userId: user.id
+            })
             deleteUser({
                 id: user.id,
                 password: isPassword,
@@ -48,6 +52,8 @@ const LkLayout = () => {
                 action: <Check color="green"/>
             })
             logoutFunction();
+            localStorage.removeItem('totalAmount');
+            localStorage.removeItem('counts');
         } else if (data){
             toast({
                 title: "Удаление аккаунта",
@@ -60,6 +66,7 @@ const LkLayout = () => {
     const logoutFunction = () => {
         dispatch(isSetAuth(false));
         localStorage.setItem('isAuth', 'false');
+        localStorage.removeItem('basketId');
         localStorage.removeItem('user');
         logoutUser();
         localStorage.removeItem('token');
