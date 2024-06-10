@@ -15,8 +15,13 @@ import Burger from "../../../UI/Burger";
 
 const CatalogPopUp = () => {
     const [isActiveCatalog, isSetActiveCatalog] = useState(false);
+    
+    const handlerCloseDialog = () => {
+        isSetActiveCatalog(false)
+    }
+
     return (
-        <Dialog onOpenChange={() => isActiveCatalog ? isSetActiveCatalog(false) : isSetActiveCatalog(true)}>
+        <Dialog open={isActiveCatalog} onOpenChange={() => isActiveCatalog ? isSetActiveCatalog(false) : isSetActiveCatalog(true)}>
             <DialogTrigger asChild>
                 <Button variant="outline" className="w-[150px]">
                     <div className="inline-flex bg-[#8761D9] items-center gap-[9px] rounded-md p-[16px]">
@@ -32,7 +37,7 @@ const CatalogPopUp = () => {
                         <DialogDescription>На данной стианичке представлен полный перечень товаров на сайте</DialogDescription>
                     </DialogHeader>
                     <nav>
-                        <CatalogLists/>
+                        <CatalogLists handlerCloseDialog={handlerCloseDialog}/>
                     </nav>
                 </DialogContent>   
             </DialogOverlay>     

@@ -16,10 +16,13 @@ import User from "../../../UI/User";
 import { useEffect, useState } from "react";
 import { Separator } from "@radix-ui/themes";
 import Basket from "../../../UI/Basket";
+import { useGetTypeQuery } from "../catalogLists/api/apiHeader";
 
 const Mobileheader = () => {
     const [isActiveMenu, isSetActiveMenu] = useState(false);
     const [isActiveSearch, isSetActiveSearch] = useState(false);
+
+    const {data} = useGetTypeQuery();
 
     useEffect(() => {
         if (isActiveMenu) {
@@ -32,14 +35,12 @@ const Mobileheader = () => {
     return (
         <div>
         <div>
-            <div className="flex justify-between items-center bg-[#8761D9]/[50%] px-[16px]">
+            <div className={`flex justify-between items-center bg-[#8761D9]/[50%] px-4`}>
                 <Button className="p-[0]" variant="link" onClick={() => isActiveMenu ? isSetActiveMenu(false) : isSetActiveMenu(true)}>
                     <Burger isActive={isActiveMenu}/>
                 </Button>
                 <Logo/>
-                <Button className="w-[24px] h-[24px]" variant="link" size="icon">
-                    <Basket/>
-                </Button> 
+                <Basket/>
             </div>
                 <div className={`z-10 overflow-auto absolute bg-white w-[100%] h-lvh ease-in duration-300 flex flex-col gap-[16px] ${isActiveMenu ? "left-[0px]" : 'left-[-1000px]'}`}>
                     <nav className="bg-[#F7F7F7] flex justify-between py-[16px] items-center px-[16px]">
@@ -65,36 +66,21 @@ const Mobileheader = () => {
                     <nav className="flex flex-col gap-[16px] px-[16px] flex-1">
                         <h3 className="font-bold">Каталог</h3>
                         <ul className="flex flex-col gap-[8px] flex-1 flex-1">
-                            <Separator size="4"/>
-                            <li><NavLink onClick={() => isSetActiveMenu(false)} to="">Игровые шыки</NavLink></li>
-                            <Separator size="4"/>
-                            <li><NavLink onClick={() => isSetActiveMenu(false)} to="">Клавиатуры</NavLink></li>
-                            <Separator size="4"/>
-                            <li><NavLink onClick={() => isSetActiveMenu(false)} to="">Корпуса</NavLink></li>
-                            <Separator size="4"/>
-                            <li><NavLink onClick={() => isSetActiveMenu(false)} to="">Оперативная память</NavLink></li>
-                            <Separator size="4"/>
-                            <li><NavLink onClick={() => isSetActiveMenu(false)} to="">Блок питания</NavLink></li>
-                            <Separator size="4"/>
-                            <li><NavLink onClick={() => isSetActiveMenu(false)} to="">Видеокарта</NavLink></li>
-                            <Separator size="4"/>
-                            <li><NavLink onClick={() => isSetActiveMenu(false)} to="">Мониторы</NavLink></li>
-                            <Separator size="4"/>
-                            <li><NavLink onClick={() => isSetActiveMenu(false)} to="">Охлаждение (-)</NavLink></li>
-                            <Separator size="4"/>
-                            <li><NavLink onClick={() => isSetActiveMenu(false)} to="">Микрофон (-)</NavLink></li>
-                            <Separator size="4"/>
-                            <li><NavLink onClick={() => isSetActiveMenu(false)} to="">Коврики (-)</NavLink></li>
-                            <Separator size="4"/>
+                            {data?.map((device) => 
+                            <div className="flex flex-col gap-4">
+                                <li><NavLink onClick={() => isSetActiveMenu(false)} to={`/catalog/${device.id}`}>{device.name}</NavLink></li>
+                                <Separator size="4"/>
+                            </div>
+
+                            )}
                         </ul>
                     </nav>
                     <nav>
                     <div className="bg-[#8761D9]/[50%]">
-        <div className="flex max-md:flex-col max-w-[1440px] m-auto justify-between py-[10px] px-[16px]">
+        <div className="flex max-md:flex-col max-w-[1440px] m-auto justify-between py-4 px-4">
             <nav>
-                <ul className="flex gap-[24px] max-md:flex-col  max-md:gap-[16px]">
-                    <li><NavLink onClick={() => isSetActiveMenu(false)} to="about" className={({isActive}) => isActive ? 'font-bold' : 'text-[black]'}>О нас</NavLink></li>
-                    <li><NavLink onClick={() => isSetActiveMenu(false)} to="contact" className={({isActive}) => isActive ? 'font-bold' : 'text-[black]'}>Контакты</NavLink></li>
+                <ul className="flex gap-[24px] max-md:flex-col  max-md:gap-4">
+                    <li><NavLink onClick={() => isSetActiveMenu(false)} to="pay" className={({isActive}) => isActive ? 'font-bold' : 'text-[black]'}>Оплата</NavLink></li>
                     <li><NavLink onClick={() => isSetActiveMenu(false)} to="delivery" className={({isActive}) => isActive ? 'font-bold' : 'text-[black]'}>Доставка</NavLink></li>
                     <li><NavLink onClick={() => isSetActiveMenu(false)} to="trade" className={({isActive}) => isActive ? 'font-bold' : 'text-[black]'}>Обмен и возврат</NavLink></li>
                 </ul>

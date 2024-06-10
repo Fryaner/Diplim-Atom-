@@ -14,11 +14,10 @@ const Header = () => {
         <header>
             <MediaQuery minWidth={768}>
             <div className="bg-[#8761D9]/[50%]">
-        <div className="flex max-md:flex-col max-w-[1440px] m-auto justify-between py-[10px] px-[16px]">
+        <div className="flex max-md:flex-col max-w-[1440px] m-auto justify-between py-4 px-4">
             <nav>
                 <ul className="flex gap-[24px] max-md:flex-col  max-md:gap-[16px]">
-                    <li><NavLink to="about" className={({isActive}) => isActive ? 'font-bold' : 'text-[black]'}>О нас</NavLink></li>
-                    <li><NavLink to="contact" className={({isActive}) => isActive ? 'font-bold' : 'text-[black]'}>Контакты</NavLink></li>
+                    <li><NavLink to="pay" className={({isActive}) => isActive ? 'font-bold' : 'text-[black]'}>Оплата</NavLink></li>
                     <li><NavLink to="delivery" className={({isActive}) => isActive ? 'font-bold' : 'text-[black]'}>Доставка</NavLink></li>
                     <li><NavLink to="trade" className={({isActive}) => isActive ? 'font-bold' : 'text-[black]'}>Обмен и возврат</NavLink></li>
                 </ul>
@@ -29,7 +28,7 @@ const Header = () => {
             </div>
         </div>
     </div>
-                    <div className="flex items-center max-w-[1440px] m-auto gap-[35px] py-[24px] px-[16px]">
+                    <div className="flex items-center max-w-[1440px] m-auto gap-[35px] py-6 px-4">
                         <div className="flex gap-[4px]">
                             <Logo/>
                         </div>

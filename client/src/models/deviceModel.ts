@@ -1,3 +1,10 @@
+export interface DeviceInfo {
+    id: number;
+    title: string;
+    description: string;
+    deviceId: number;
+}
+
 export interface DeviceModel {
     id: number;
     model: string;
@@ -6,6 +13,7 @@ export interface DeviceModel {
     price: number;
     brandId: number;
     typeId: number;
+    info: DeviceInfo[];
 
 }
 

@@ -53,7 +53,7 @@ const Basket = () => {
             return;
         }
         if (!devicesId || devicesId.length === 0) {
-            localStorage.setItem('totalAmount', String(0))
+            return;
         }
         localStorage.setItem('counts', String(devicesId?.length))
         dispatch(totalAmountBasketMinus(1))

@@ -4,6 +4,7 @@ import { Separator } from "../../../../UI/Separator";
 import { Minus, Plus, RussianRuble, Star, Trash } from "lucide-react";
 import { Button } from "../../../../UI/Button";
 import MediaQuery from "react-responsive";
+import { Link } from "react-router-dom";
 
 interface CardBasketDeviceProps {
     deviceModel: string;
@@ -40,7 +41,7 @@ const CardBasketDevice: FC<CardBasketDeviceProps> = ({
                             <div className="flex flex-col flex-1 max-md:gap-4">
                                 <div className="flex justify-between max-md:flex-col max-md:gap-2">
                                     <p key={deviceId}>
-                                        {deviceTypeName}/{deviceModel}/{deviceBrandMane}
+                                        <Link to={`/device/${deviceId}`}>{deviceTypeName}/{deviceModel}/{deviceBrandMane}</Link>
                                     </p>
                                     <p className="flex font-bold">{devicePrice * deviceCount}<RussianRuble className="w-4"/></p>
                                 </div>

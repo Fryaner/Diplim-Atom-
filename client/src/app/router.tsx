@@ -1,24 +1,47 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./app";
-import StartPage from "../pages/startPage";
 import { RegisterForm } from "../modules/register";
 import { AuthorizationForm } from "../modules/authorization";
 import LkLayout from "../modules/lc/components/lcLayout";
 import Redirect from "../modules/redirect";
 import LcUser from "../modules/lc/components/lcUser";
 import LcResetPassword from "../modules/lc/components/lcResetPassword";
-import CatalogMouse from "../modules/catalog/components/catalogMouse";
+import CatalogMouse from "../modules/catalog/components/catalogPage";
 import Basket from "../modules/basket/components";
+import AboutPage from "../components/aboutPage";
+import PayPage from "../components/payPage";
+import DeliveryPage from "../components/deliveryPage";
+import TradePage from "../components/tradePage";
+import RequisitesPage from "../components/requisitesPage";
+import ErrorPage from "../components/errorPage";
+import DeviceInfo from "../components/CardDeviceInfo/components/DeviceInfo";
 
 
 export const router = createBrowserRouter([
     {
         path: '',
         element: <App/>,
+        errorElement: <ErrorPage/>,
         children: [
             {
-                path: 'contact',
-                element: <StartPage/>, 
+                path: 'pay',
+                element: <PayPage/>, 
+            },
+            {
+                path: 'delivery',
+                element: <DeliveryPage/>, 
+            },
+            {
+                path: 'requisites',
+                element: <RequisitesPage/>, 
+            },
+            {
+                path: 'trade',
+                element: <TradePage/>, 
+            },
+            {
+                path: 'about',
+                element: <AboutPage/>, 
             },
             {
                 path: 'register',
@@ -47,9 +70,13 @@ export const router = createBrowserRouter([
                 element: <LcResetPassword/>
             },
             {
-                path: 'test',
-                element: <CatalogMouse/>
-            }
+                path: 'catalog/:id',
+                element: <CatalogMouse/>,
+            },
+            {
+                path: 'device/:id',
+                element: <DeviceInfo/>
+            },
         ]
-    }
+    },
 ])
