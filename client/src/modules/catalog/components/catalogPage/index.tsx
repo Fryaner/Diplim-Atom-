@@ -25,15 +25,14 @@ const CatalogMouse = () => {
     const [addDevice, {data: dataAddDevice}] = useAddBasketDeviceMutation();
 
     const needDevices = dataDevices?.rows.filter((device) => device.typeId === Number(id));
-    console.log(needDevices)
     const handlerAddDevice = (deviceId: number, devicePrice: number) => {
         addDevice({
             basketId,
             deviceId
         })
-        if (!dataDevicesId || dataDevicesId.length === 0) {
+        if (!dataDevicesId) {
             return;
-        }
+        } 
         localStorage.setItem('totalAmount', String(Number(localStorage.getItem('totalAmount')) + devicePrice))
     }
 

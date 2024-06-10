@@ -21,7 +21,6 @@ const DeviceInfo = () => {
 
     useEffect(() => {
         if (!dataDeviceId) {
-            console.log('fdffddf')
             return;
         }
         refetch()

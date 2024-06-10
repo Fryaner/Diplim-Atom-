@@ -52,8 +52,11 @@ const Basket = () => {
         if (localStorage.getItem('isAuth') === 'false') {
             return;
         }
-        if (!devicesId || devicesId.length === 0) {
+        if (!devicesId) {
             return;
+        }
+        if (devicesId?.length === 0) {
+            localStorage.setItem('totalAmount', String(0))
         }
         localStorage.setItem('counts', String(devicesId?.length))
         dispatch(totalAmountBasketMinus(1))
