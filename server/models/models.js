@@ -61,6 +61,20 @@ const BasketDevice = sequelize.define(
     }
 )
 
+const Favorite = sequelize.define(
+    'favorite',
+    {
+        id:{type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true}
+    }
+)
+
+const FavoriteDevice = sequelize.define(
+    'favorite_device',
+    {
+        id:{type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true},
+    }
+)
+
 const Device = sequelize.define(
     'device',
     {
@@ -115,6 +129,9 @@ const TypeBrand = sequelize.define(
 User.hasOne(Basket);
 Basket.belongsTo(User);
 
+User.hasOne(Favorite);
+Favorite.belongsTo(User);
+
 User.hasMany(Raiting);
 Raiting.belongsTo(User);
 
@@ -127,8 +144,11 @@ RoleUser.belongsTo(User, { onDelete: 'CASCADE' });
 Role.hasMany(RoleUser);
 RoleUser.belongsTo(Role);
 
-Basket.hasMany(BasketDevice);
-BasketDevice.belongsTo(Basket);
+Basket.hasMany(BasketDevice, { onDelete: 'CASCADE' });
+BasketDevice.belongsTo(Basket, { onDelete: 'CASCADE' });
+
+Favorite.hasMany(FavoriteDevice, { onDelete: 'CASCADE' });
+FavoriteDevice.belongsTo(Favorite,  { onDelete: 'CASCADE' });
 
 Type.hasMany(Device);
 Device.belongsTo(Type);
@@ -141,6 +161,9 @@ Raiting.belongsTo(Device);
 
 Device.hasMany(BasketDevice);
 BasketDevice.belongsTo(Device);
+
+Device.hasMany(FavoriteDevice);
+FavoriteDevice.belongsTo(Device);
 
 Device.hasMany(DeviceInfo, {as: 'info'});
 DeviceInfo.belongsTo(Device);
@@ -161,4 +184,6 @@ module.exports = {
     DeviceInfo,
     BasketDevice,
     Raiting,
+    Favorite,
+    FavoriteDevice
 }
