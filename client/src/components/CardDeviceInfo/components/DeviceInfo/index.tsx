@@ -1,30 +1,54 @@
 import { useParams } from "react-router-dom";
-import { useGetDeviceOneQuery, useGetBrandQuery, useGetTypeQuery, useAddDeviceToBasketMutation, useGetBasketDeviceIdQuery } from "../../api/apiDevice";
-import { ShoppingBag, Star } from "lucide-react";
+import { 
+    useGetDeviceOneQuery, 
+    useGetBrandQuery, 
+    useGetTypeQuery,
+    useAddDeviceToBasketMutation,
+    useGetBasketDeviceIdQuery,
+    useAddDeviceToFavoriteMutation,
+    useGetFavoriteDeviceIdQuery,
+    useDeleteDeviceToFavoriteMutation,
+} from "../../api/apiDevice";
+import { Heart, ShoppingBag, Star } from "lucide-react";
 import { Button } from "../../../../UI/Button";
 import { Separator } from "../../../../UI/Separator";
 import { Spinner } from "@radix-ui/themes";
 import { useDispatch } from "react-redux";
-import { basketDeviceCountMinus, totalAmountBasketMinus } from "../../../../store/basketSlice";
+import { basketDeviceCountMinus } from "../../../../store/basketSlice";
 import { useEffect } from "react";
+import { favoriteDeviceCountPlus } from "../../../../store/favoriteSlice";
 
 const DeviceInfo = () => {
     const basketId = Number(localStorage.getItem('basketId'));
+    const favoriteId = Number(localStorage.getItem('favoriteId'));
+
     const {id} = useParams();
 
     const {data: dataDeviceInfo} = useGetDeviceOneQuery({id: Number(id)});
     const {data: dataBrand} = useGetBrandQuery();
     const {data: dataType} = useGetTypeQuery();
+
     const [addDevice, {data: dataAddDevice, isLoading: isAddDeviceLoading}] = useAddDeviceToBasketMutation();
-    const {data: dataDeviceId, refetch} = useGetBasketDeviceIdQuery({basketId})
+    const [addDeviceFavorite, {data: dataAddDeviceFavorite}] = useAddDeviceToFavoriteMutation();
+    const [deleteDeviceFavorite, {data: dataDeleteDeviceFavorite}] = useDeleteDeviceToFavoriteMutation();
+
+    const {data: dataDeviceId, refetch: refetchBasket} = useGetBasketDeviceIdQuery({basketId})
+    const {data: dataDeviceIdFavorite, refetch: refetchFavorite} = useGetFavoriteDeviceIdQuery({favoriteId})
+
     const dispath = useDispatch();
+
 
     useEffect(() => {
         if (!dataDeviceId) {
             return;
         }
-        refetch()
+        refetchBasket()
     }, [dataAddDevice])
+
+    
+    useEffect(() => {
+        refetchFavorite()
+    }, [dataAddDeviceFavorite, dataDeleteDeviceFavorite])
 
     useEffect(() => {
         if (!dataDeviceId) {
@@ -39,13 +63,39 @@ const DeviceInfo = () => {
         dispath(basketDeviceCountMinus(1));
     }, [dataDeviceId])
 
+    useEffect(() => {
+        if (!dataDeviceIdFavorite) {
+            return;
+        }        
+        if(!dataDeviceInfo) {
+            return;
+        }
+        localStorage.setItem('countsFavorite', String(dataDeviceIdFavorite?.length))
+        dispath(favoriteDeviceCountPlus(1));
+    }, [dataDeviceIdFavorite])
+
     if (!dataDeviceInfo) {
         return <></>;
     }
+    const isFavorite = dataDeviceIdFavorite?.find((item) => item.deviceId === dataDeviceInfo.id)
 
     const handlerAddDevice = () => {
         addDevice({
             basketId,
+            deviceId: dataDeviceInfo.id
+        })
+    }
+
+    const handlerControllFavorite = () => {
+        if (isFavorite) {
+            deleteDeviceFavorite({
+                favoriteId,
+                deviceId: dataDeviceInfo.id
+            })
+            return;
+        }
+        addDeviceFavorite({
+            favoriteId,
             deviceId: dataDeviceInfo.id
         })
     }
@@ -62,7 +112,9 @@ const DeviceInfo = () => {
                     <div className="flex flex-col gap-4">
                         <p className="flex items-center font-bold text-[24px]">
                             {dataDeviceInfo?.model}/{nameBrandDevice?.name}/{nameTypeDevice?.name}
-                            <Button className="p-0 h-full" variant="link" size="icon"><Star className="hover:fill-[orange]"/></Button>
+                            <Button onClick={() => handlerControllFavorite()} className="p-0 h-full" variant="link" size="icon">
+                                <Heart className={`hover:fill-[gray] ${isFavorite ? "fill-[pink]" : "fill-[white]"}`}/>
+                            </Button>
                         </p>
                         <div className="flex gap-2">
                             <div className="flex">

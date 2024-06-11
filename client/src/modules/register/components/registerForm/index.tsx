@@ -13,7 +13,7 @@ import {
     FormMessage,
   } from "../../../../UI/Form/index";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useAddUserMutation, useCreateBasketMutation } from "../../api/registerApi";
+import { useAddUserMutation, useCreateBasketMutation,useCreateFavoriteMutation } from "../../api/registerApi";
 import { Spinner } from "@radix-ui/themes";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -24,6 +24,7 @@ import { UserModel } from "../../../../models/userModel";
 export const RegisterForm = () => {
     const [addUser, {data, isLoading, isError}] = useAddUserMutation();
     const [createBasket, {data: basketData}] = useCreateBasketMutation();
+    const [createFavorite, {data: basketDataFavorite}] = useCreateFavoriteMutation();
 
     const dispatch = useDispatch();
 
@@ -58,8 +59,12 @@ export const RegisterForm = () => {
                 const createBasketResult = await createBasket({
                     userId: registerResult.user.id
                 }).unwrap();
-                if (createBasketResult) {
+                const createFavoriteResult = await createFavorite({
+                    userId: registerResult.user.id
+                }).unwrap();
+                if (createBasketResult && createFavoriteResult) {
                     localStorage.setItem('basketId', createBasketResult.id.toString());
+                    localStorage.setItem('favoriteId', createFavoriteResult.id.toString());
                 }
             }
         } catch (error) {
@@ -86,6 +91,8 @@ export const RegisterForm = () => {
             localStorage.setItem('isAuth', 'true');
             localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('token', data.accessToken);
+            localStorage.setItem('counts', String(0));
+            localStorage.setItem('countsFavorite', String(0));
             navigate('/lc');
         }
     })

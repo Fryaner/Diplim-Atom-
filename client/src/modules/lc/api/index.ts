@@ -23,8 +23,20 @@ const apiEditUser = mainApi.injectEndpoints({
                 method: 'DELETE',
                 body: body,
             })
-        })
+        }),
+        deleteFavorite: build.mutation<UserModel, {userId: number | undefined}>({
+            query: (body) => ({
+                url: 'favorite/delete',
+                method: 'DELETE',
+                body: body,
+            })
+        }),
     })
 })
 
-export const { useEditUserMutation, useDeleteUserMutation, useDeleteBasketMutation } = apiEditUser; 
+export const { 
+    useEditUserMutation, 
+    useDeleteUserMutation, 
+    useDeleteBasketMutation,
+     useDeleteFavoriteMutation
+     } = apiEditUser; 

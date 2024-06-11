@@ -15,6 +15,7 @@ import TradePage from "../components/tradePage";
 import RequisitesPage from "../components/requisitesPage";
 import ErrorPage from "../components/errorPage";
 import DeviceInfo from "../components/CardDeviceInfo/components/DeviceInfo";
+import FavoritePage from "../modules/favorite/components/favoritePage";
 
 
 export const router = createBrowserRouter([
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
             {
                 path: 'basket',
                 element: <Basket/>
+            },
+            {
+                path: 'favorite',
+                element: <FavoritePage/>
             },
             {
                 path: 'lc',

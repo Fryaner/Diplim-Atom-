@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Button } from "../../UI/Button";
-import { RussianRuble, ShoppingBag, Star } from "lucide-react";
+import { Heart, RussianRuble, ShoppingBag, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { boolean } from "zod";
 interface CardDeviceProps {
     id: number;
     model?: string;
@@ -12,6 +13,8 @@ interface CardDeviceProps {
     rating?: number;
     price: number;
     handlerAddDevice: (deviceId: number, devicePrice: number) => void;
+    handlerControllerFavorite:(deviceId: number, isFavorite: boolean | undefined) => void;
+    dataDevicesIdFavorite: { id: number; deviceId: number; }[] | undefined;
 }
 
 
@@ -24,19 +27,23 @@ const CardDevice:FC<CardDeviceProps> = ({
      price, 
      brand, 
      type,
-    handlerAddDevice,}) => {
+    handlerAddDevice,
+    handlerControllerFavorite,
+    dataDevicesIdFavorite,
+}) => {
 
     const starElements = Array.from({ length: 5 }, (_, index) => index < rating);
-
+    const isFavorite = dataDevicesIdFavorite?.some(item => item.deviceId === id);
+    
     return (
             <div className="flex flex-col w-[31%] max-lg:w-[48%]  max-md:w-full border p-4 gap-4 rounded justify-between">
                 <div>
-                    <div className="relative">
+                    <div className="relative z-0">
                         <Link to={`/device/${id}`}>
                             <img src={`http://localhost:8000/${image}`} alt={descriptionImage}/>
                             </Link>
-                        <Button className="w-[24px] h-[24px] absolute top-0 right-0" variant="link" size="icon">
-                            <Star className="hover:fill-[orange]"/>
+                        <Button onClick={() => handlerControllerFavorite(id, isFavorite)} className="w-[24px] h-[24px] absolute top-0 right-0" variant="link" size="icon">
+                            <Heart className={`hover:fill-[gray] ${isFavorite ? "fill-[pink]" : "fill-[white]"}`}/>
                         </Button>
                     </div>
                     <div className="flex flex-col gap-2">

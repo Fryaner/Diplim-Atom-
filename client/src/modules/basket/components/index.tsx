@@ -5,6 +5,9 @@ import {
     useDeleteBasketDeviceMutation,
     useAddBasketDeviceMutation,
     useReduceBasketDeviceMutation,
+    useAddFavoriteDeviceMutation,
+    useDeleteFavoriteDeviceMutation,
+    useGetFavoriteDeviceIdQuery,
  } from "../api/basketApi";
 import {Spinner } from "@radix-ui/themes";
 import { useGetBrandDevicesQuery, useGetTypeDevicesQuery } from "../../catalog/api/catalogApi";
@@ -14,9 +17,12 @@ import CardBasketDevice from "./cardBasketDevice";
 import { useDispatch } from "react-redux";
 import { basketDeviceCountMinus, totalAmountBasketMinus } from "../../../store/basketSlice";
 import { ChevronDown, ChevronUp, RussianRuble } from "lucide-react";
+import { favoriteDeviceCountMinuse } from "../../../store/favoriteSlice";
 
 const Basket = () => {
     const basketId = Number(localStorage.getItem('basketId'));
+    const favoriteId = Number(localStorage.getItem('favoriteId'));
+
     const { data: devicesId, isLoading, isError, refetch } = useGetBasketDeviceIdQuery({basketId});
     const { data: devices } = useGetBasketDeviceQuery();
     const { data: dataBrands } = useGetBrandDevicesQuery();
@@ -24,6 +30,11 @@ const Basket = () => {
     const [deleteDevice, {data: deleteDataDevice}] = useDeleteBasketDeviceMutation();
     const [reduceDevice, {data: reduceBasketDevice}] = useReduceBasketDeviceMutation();
     const [addDevice, {data: addDataDevice}] = useAddBasketDeviceMutation();
+
+    const { data: devicesFavoriteId, refetch: refetchFavorite } = useGetFavoriteDeviceIdQuery({favoriteId});
+    const [addDeviceFavorite, {data: addDataDeviceFavorite}] = useAddFavoriteDeviceMutation();
+    const [deleteDeviceFavorite, {data: deleteDataDeviceFavorite}] = useDeleteFavoriteDeviceMutation();
+
     const [isActive, isSetActive] = useState(false);
     const dispatch = useDispatch();
 
@@ -48,6 +59,24 @@ const Basket = () => {
         })
     }
 
+    const handlerControllerDevice = (deviceId: number, isFavorite: boolean | undefined) => {
+        if (isFavorite) {
+            deleteDeviceFavorite({
+                favoriteId,
+                deviceId
+            })
+            return;
+        }
+        addDeviceFavorite({
+            favoriteId,
+            deviceId
+        })
+    }
+
+    useEffect(() => {
+        refetchFavorite()
+    }, [deleteDataDeviceFavorite, addDataDeviceFavorite])
+
     useEffect(() => {
         if (localStorage.getItem('isAuth') === 'false') {
             return;
@@ -59,10 +88,12 @@ const Basket = () => {
             localStorage.setItem('totalAmount', String(0))
         }
         localStorage.setItem('counts', String(devicesId?.length))
+        localStorage.setItem('countsFavorite', String(devicesFavoriteId?.length))
         dispatch(totalAmountBasketMinus(1))
         dispatch(basketDeviceCountMinus(1))
+        dispatch(favoriteDeviceCountMinuse(1))
         refetch()
-    }, [deleteDataDevice, reduceBasketDevice, addDataDevice, devicesId]);
+    }, [deleteDataDevice, reduceBasketDevice, addDataDevice, devicesId, devicesFavoriteId]);
 
     if (isLoading) {
         return <Spinner />;
@@ -129,6 +160,8 @@ const Basket = () => {
                 <div className="flex flex-col gap-12 w-[70%] max-lg:w-full">
                     {mergedDevices?.map(device => (
                     <CardBasketDevice 
+                    devicesFavoriteId={devicesFavoriteId}
+                    handlerControllerDevice={handlerControllerDevice}
                     basketDeviceId={device.basketDeviceId}
                     deviceBrandMane={device.brandName} 
                     deviceCount={device.count} 

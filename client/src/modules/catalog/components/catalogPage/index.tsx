@@ -8,23 +8,36 @@ import {
     useGetTypeDevicesQuery,
     useAddBasketDeviceMutation,
     useGetBasketDeviceIdQuery,
+    useAddFavoriteDeviceMutation,
+    useGetFavoriteDeviceIdQuery,
+    useDeleteFavoriteDeviceMutation,
  } from "../../api/catalogApi"
 import { useParams } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { basketDeviceCountMinus, totalAmountBasketMinus } from "../../../../store/basketSlice"
+import { favoriteDeviceCountMinuse } from "../../../../store/favoriteSlice"
 
 const CatalogMouse = () => {
     const {id} = useParams();
     const dispath = useDispatch();
 
     const basketId = Number(localStorage.getItem('basketId'));
+    const favoriteId = Number(localStorage.getItem('favoriteId'));
+
     const {data: dataDevices } = useGetDevicesQuery();
-    const {data: dataDevicesId, refetch} = useGetBasketDeviceIdQuery({basketId});
+
+    const {data: dataDevicesId, refetch: refetchBasket} = useGetBasketDeviceIdQuery({basketId});
+    const {data: dataDevicesIdFavorite, refetch: refetchFavorite} = useGetFavoriteDeviceIdQuery({favoriteId});
+
     const {data: dataBrands} = useGetBrandDevicesQuery();
     const {data: dataTypes} = useGetTypeDevicesQuery();
+
     const [addDevice, {data: dataAddDevice}] = useAddBasketDeviceMutation();
+    const [addFavorite, {data: dataAddDeviceFavorite}] = useAddFavoriteDeviceMutation();
+    const [deleteFavorite, {data: dataDeleteDeviceFavorite}] = useDeleteFavoriteDeviceMutation();
 
     const needDevices = dataDevices?.rows.filter((device) => device.typeId === Number(id));
+
     const handlerAddDevice = (deviceId: number, devicePrice: number) => {
         addDevice({
             basketId,
@@ -36,10 +49,22 @@ const CatalogMouse = () => {
         localStorage.setItem('totalAmount', String(Number(localStorage.getItem('totalAmount')) + devicePrice))
     }
 
+    const handlerControllerFavorite = (deviceId: number, isFavorite: boolean | undefined) => {
+        if (isFavorite) {
+            deleteFavorite({ favoriteId, deviceId });
+            return;
+        } 
+            addFavorite({ favoriteId, deviceId });
+  
+    };
+
     useEffect(() => {
-        refetch();
+        refetchBasket();
     }, [dataAddDevice])
 
+    useEffect(() => {
+        refetchFavorite();
+    }, [dataAddDeviceFavorite, dataDeleteDeviceFavorite])
 
     useEffect(() => {
         if (!dataDevicesId || dataDevicesId.length === 0) {
@@ -50,6 +75,14 @@ const CatalogMouse = () => {
         dispath(totalAmountBasketMinus(1));
 
     }, [dataDevicesId])
+
+    useEffect(() => {
+        if (!dataDevicesIdFavorite) {
+            return;
+        }
+        localStorage.setItem('countsFavorite', String(dataDevicesIdFavorite?.length))
+        dispath(favoriteDeviceCountMinuse(1));
+    }, [dataDevicesIdFavorite])
 
     if (!needDevices || needDevices.length === 0) {
         return <p className="px-4 flex justify-center items-center font-bold h-dvh text-center">Данные товары ещё не появились на площадке. Приносим свои извинения</p>;
@@ -87,6 +120,8 @@ const CatalogMouse = () => {
                                 dataTypes?.map((type) =>   
                                     type.id === device.typeId ?                     
                                 <CardDevice 
+                                    dataDevicesIdFavorite={dataDevicesIdFavorite} 
+                                    handlerControllerFavorite={handlerControllerFavorite}
                                     handlerAddDevice={handlerAddDevice}
                                     id={device.id}
                                     brand={brand.name} 

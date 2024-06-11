@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Button } from "../../UI/Button";
-import { RussianRuble, ShoppingBag, Star } from "lucide-react";
+import { Heart, RussianRuble, ShoppingBag, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface CardFavoriteDeviceProps {
     id: number;
@@ -8,21 +9,40 @@ interface CardFavoriteDeviceProps {
     raiting: number;
     image: string;
     price: number;
+    handlerControllFavorite: (deviceId: number) => void;
+    handlerAddDeviceBasket: (deviceId: number, price: number) => void;
+    dataDevices: { id: number; deviceId: number }[];
 }
 
-const CardFavoriteDevice:FC<CardFavoriteDeviceProps> = ({id, model, raiting, image, price}) => {
+const CardFavoriteDevice:FC<CardFavoriteDeviceProps> = ({
+    id, 
+    model,
+    raiting,
+    image,
+    price, 
+    dataDevices,
+    handlerControllFavorite,
+    handlerAddDeviceBasket,
+    }) => {
+    const isActive = dataDevices.find((item) => item.deviceId === id);
     return (
-        <div>
-            <div className="w-[33%] relative">
-                <img src={`http://localhost:8000/${image}`} alt={model}/>
-                <Star className="absolute top-0 right-0"/>
-            </div>
-            <div>
+        <div className="w-[31%] max-lg:w-[48%] max-md:w-full flex flex-col justify-between">
+            <div className="flex flex-col gap-4 h-full relative p-4 border-r-2 border-[#8761D9] border-t-2 border-[#8761D9] border-l-2 border-[#8761D9]">
                 <div>
-                    <p>{model}</p>
-                    <p>{price}<RussianRuble/></p>   
+                    <Link to={`/device/${id}`}>
+                    <img src={`http://localhost:8000/${image}`} alt={model}/>
+                </Link>
+                <Button variant="link" size="icon" className="absolute top-4 right-4 p-0" onClick={() => handlerControllFavorite(id)} >
+                        <Heart className={`${isActive ? "fill-[pink]" : "fill-[white]"}`}/>
+                </Button>
                 </div>
-                <Button>Добавить в корзину<ShoppingBag/></Button>
+                <Link className="flex justify-between px-4" to={`/device/${id}`}>
+                    <p>{model}</p>
+                    <p className="flex">{price}<RussianRuble/></p>   
+                </Link>
+            </div>
+            <div className="flex flex-col gap-4 justify-between">
+                <Button className="rounded-none rounded-b-lg bg-[#8761D9]" onClick={()=> handlerAddDeviceBasket(id, price)} >Добавить в корзину<ShoppingBag/></Button>
             </div>
         </div>
     )

@@ -23,6 +23,13 @@ const registerApi = mainApi.injectEndpoints({
                 method: 'POST',
                 body: body,
             })
+        }),
+        createFavorite: build.mutation<{id: number}, {userId: number | undefined}>({
+            query: (body) => ({
+                url: 'favorite/create',
+                method: 'POST',
+                body: body,
+            })
         })
     }),
 })
@@ -31,4 +38,5 @@ export const {
     useGetAllUsersQuery, 
     useAddUserMutation,
     useCreateBasketMutation,
+    useCreateFavoriteMutation,
 } = registerApi;

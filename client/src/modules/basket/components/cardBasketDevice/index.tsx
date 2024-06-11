@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Input } from "../../../../UI/Input";
 import { Separator } from "../../../../UI/Separator";
-import { Minus, Plus, RussianRuble, Star, Trash } from "lucide-react";
+import { Heart, Minus, Plus, RussianRuble, Star, Trash } from "lucide-react";
 import { Button } from "../../../../UI/Button";
 import MediaQuery from "react-responsive";
 import { Link } from "react-router-dom";
@@ -18,6 +18,8 @@ interface CardBasketDeviceProps {
     handlerDeleteDevice: (deviceId: number) => void;
     handlerAddDevice: (deviceId: number) => void;
     handlerReduceDevice: (basketDeviceId: number) => void;
+    handlerControllerDevice: (deviceId: number, isFavorite: boolean | undefined) => void;
+    devicesFavoriteId: { id: number; deviceId: number; }[] | undefined;
 }
 
 const CardBasketDevice: FC<CardBasketDeviceProps> = ({
@@ -31,7 +33,10 @@ const CardBasketDevice: FC<CardBasketDeviceProps> = ({
     handlerAddDevice,
     basketDeviceId,
     handlerReduceDevice,
+    devicesFavoriteId,
+    handlerControllerDevice
 }) => {
+    const isFavorite = devicesFavoriteId?.some((item) => item.deviceId === deviceId);
     return (
                     <div className="flex flex-col gap-6">
                         <div className="flex flex-1 gap-4">
@@ -47,7 +52,7 @@ const CardBasketDevice: FC<CardBasketDeviceProps> = ({
                                 </div>
                                 <div className="flex flex-1 items-end justify-between gap-4 max-lg:gap-4 max-md:items-start max-md:flex-col-reverse">
                                     <div className="flex gap-2">
-                                        <Button variant="link" className="h-full p-0 flex gap-2"><Star color="orange" className="w-4 h-4"/><p>В избранное</p></Button>
+                                        <Button onClick={() => handlerControllerDevice(deviceId, isFavorite)} variant="link" className="h-full p-0 flex gap-2"><Heart className={`w-4 h-4 ${isFavorite ? 'fill-[pink]' : 'fill-[white]'}`}/><p>В избранное</p></Button>
                                         <Button onClick={() => handlerDeleteDevice(deviceId)} variant="link" className="h-full p-0 flex gap-2"><Trash color="red" className="w-4 h-4"/><p>Удалить</p></Button>
                                     </div>
                                     <MediaQuery maxWidth={768}>

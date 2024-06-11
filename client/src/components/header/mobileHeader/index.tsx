@@ -42,7 +42,7 @@ const Mobileheader = () => {
                 <Logo/>
                 <Basket/>
             </div>
-                <div className={`z-10 overflow-auto absolute bg-white w-[100%] h-lvh ease-in duration-300 flex flex-col gap-[16px] ${isActiveMenu ? "left-[0px]" : 'left-[-1000px]'}`}>
+                <div className={`z-20 overflow-auto absolute bg-white w-[100%] h-lvh ease-in duration-300 flex flex-col gap-[16px] ${isActiveMenu ? "left-[0px]" : 'left-[-1000px]'}`}>
                     <nav className="bg-[#F7F7F7] flex justify-between py-[16px] items-center px-[16px]">
                         {
                         isActiveSearch ?  
@@ -94,7 +94,7 @@ const Mobileheader = () => {
                     </nav>
                 </div>
         </div>
-        <div className="flex w-[100%] fixed bottom-[0px] bg-white border-t justify-around py-4">
+        <div className="flex w-[100%] fixed bottom-[0px] bg-white border-t justify-around py-4 z-10">
                         <div>
                             <Link className="flex flex-col items-center gap-[3px]" to="/">
                                 <Home/>
@@ -115,7 +115,7 @@ const Mobileheader = () => {
                         </div>
                         <div>
                             <Link className="flex flex-col items-center gap-[3px]" to="/">
-                                <Star/>
+                                <Favorite/>
                                 <p>Избранное</p>
                             </Link>
                         </div>

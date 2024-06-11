@@ -17,11 +17,11 @@ const Basket = () => {
         <Link to="basket" className="flex gap-4">
             <div className="relative">
                 <ShoppingBasket/>
-                <p className="text-[white] text-[13px] absolute top-[-10px] bg-[#8761D9] right-[-10px] w-[auto] h-[auto] px-1 h-4 flex justify-center items-center rounded-full">
                 {localStorage.getItem('isAuth') === 'true' ? 
                         localStorage.getItem('counts') ? 
-                             localStorage.getItem('counts') : 0 : 0} 
-                </p>
+                        <p className="text-[white] text-[13px] absolute top-[-10px] bg-[#8761D9] right-[-10px] w-[auto] h-[auto] px-1 h-4 flex justify-center items-center rounded-full">
+                             {localStorage.getItem('counts')}
+                        </p>: <p></p> : <p></p>} 
             </div>
             <MediaQuery minWidth={768}>
                 <div className="flex items-center gap-[3px]">

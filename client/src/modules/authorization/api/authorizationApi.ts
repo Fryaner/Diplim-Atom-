@@ -26,7 +26,14 @@ const authorizationApi = mainApi.injectEndpoints({
                 method: 'POST',
                 body
             })
-        })
+        }),
+        getFavorite: build.mutation<{id: number}, {userId: number | undefined}>({
+            query: (body) => ({
+                url: 'favorite',
+                method: 'POST',
+                body
+            })
+        }),
     }),
 })
 
@@ -34,4 +41,5 @@ export const {
     useLoginMutation,
     useLogoutMutation,
     useGetBasketMutation,
+    useGetFavoriteMutation,
 } = authorizationApi;

@@ -13,7 +13,7 @@ import {
     FormMessage,
   } from "../../../../UI/Form/index";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useLoginMutation, useGetBasketMutation } from "../../api/authorizationApi";
+import { useLoginMutation, useGetBasketMutation, useGetFavoriteMutation } from "../../api/authorizationApi";
 import { Spinner } from "@radix-ui/themes";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -22,6 +22,7 @@ import { UserModel } from "../../../../models/userModel";
 
 export const AuthorizationForm = () => {
     const [getBasket] = useGetBasketMutation();
+    const [getFavorite] = useGetFavoriteMutation();
     const [loginUser, {data, isLoading, isError, }] = useLoginMutation();
     
     const dispatch = useDispatch();
@@ -74,8 +75,12 @@ export const AuthorizationForm = () => {
                 const basketResult = await getBasket({
                     userId: loginResult.user.id
                 }).unwrap();
-                if (basketResult) {
+                const favoriteResult = await getFavorite({
+                    userId: loginResult.user.id
+                }).unwrap();
+                if (basketResult && favoriteResult) {
                     localStorage.setItem('basketId', basketResult.id.toString());
+                    localStorage.setItem('favoriteId', favoriteResult.id.toString());
                 }
             }
         } catch (error) {
