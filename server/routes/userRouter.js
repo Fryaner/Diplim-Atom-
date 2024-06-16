@@ -16,6 +16,7 @@ router.post('/logout', userController.logout);
 router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh);
 router.get('/', authMiddlleware, userController.getUsers);
+router.get('/:id', userController.getUser);
 
 router.post('/addRole',userController.addRole);
 router.delete('/removeRole',userController.removeRole);

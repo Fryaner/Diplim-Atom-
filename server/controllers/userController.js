@@ -89,6 +89,16 @@ class UserController {
             return res.json(e.message)
         }
     }
+    
+    async getUser(req, res, next) {
+        try {
+            const {id} = req.params;
+            const user = await userService.getUser(id);
+            return res.json(user);
+        } catch (e) {
+            return res.json(e.message)
+        }
+    }
 
    async addRole(req, res, next) {
     try {

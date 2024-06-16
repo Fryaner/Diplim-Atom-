@@ -106,7 +106,16 @@ const Raiting = sequelize.define(
     'raiting',
     {
         id:{type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true},
-        rate:{type: DataTypes.INTEGER, allowNull: false}
+        rate:{type: DataTypes.INTEGER, allowNull: false},
+        feedback: {type: DataTypes.STRING, allowNullL: false}
+    },
+    {
+        indexes: [
+            {
+                unique: true,
+                fields: ['userId', 'deviceId']
+            }
+        ]
     }
 )
 

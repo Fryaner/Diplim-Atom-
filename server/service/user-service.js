@@ -180,6 +180,11 @@ class UserService {
         return users;
     }
 
+    async getUser(id) {
+        const user = await User.findOne({where: {id}});
+        return user;
+    }
+
     async addRole(userId, roleId) {
         const roles = await Role.findAll();
         const rolesId =  await Promise.all(roles.map(async (roles) => {
