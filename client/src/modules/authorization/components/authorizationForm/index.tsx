@@ -70,7 +70,7 @@ export const AuthorizationForm = () => {
                 login: values.loginAndEmailandPhone,
                 password: values.password,
             }).unwrap();
-    
+            console.log("1")
             if (loginResult?.user?.id) {
                 const basketResult = await getBasket({
                     userId: loginResult.user.id
@@ -78,7 +78,9 @@ export const AuthorizationForm = () => {
                 const favoriteResult = await getFavorite({
                     userId: loginResult.user.id
                 }).unwrap();
+                console.log(loginResult.user.id)
                 if (basketResult && favoriteResult) {
+                    console.log("3")
                     localStorage.setItem('basketId', basketResult.id.toString());
                     localStorage.setItem('favoriteId', favoriteResult.id.toString());
                 }

@@ -16,6 +16,13 @@ import { useParams } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { basketDeviceCountMinus, totalAmountBasketMinus } from "../../../../store/basketSlice"
 import { favoriteDeviceCountMinuse } from "../../../../store/favoriteSlice"
+import {   Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue, } from "../../../../UI/Select"
+import { useToast } from "../../../../UI/UseToast"
+import { Check } from "lucide-react"
 
 const CatalogMouse = () => {
     const {id} = useParams();
@@ -36,12 +43,18 @@ const CatalogMouse = () => {
     const [addFavorite, {data: dataAddDeviceFavorite}] = useAddFavoriteDeviceMutation();
     const [deleteFavorite, {data: dataDeleteDeviceFavorite}] = useDeleteFavoriteDeviceMutation();
 
+    const {toast} = useToast();
+
     const needDevices = dataDevices?.rows.filter((device) => device.typeId === Number(id));
 
     const handlerAddDevice = (deviceId: number, devicePrice: number) => {
         addDevice({
             basketId,
             deviceId
+        })
+        toast({
+            title: 'Вы успешно добавили товар в корзину.',
+            action: <Check/>
         })
         if (!dataDevicesId) {
             return;
@@ -52,9 +65,17 @@ const CatalogMouse = () => {
     const handlerControllerFavorite = (deviceId: number, isFavorite: boolean | undefined) => {
         if (isFavorite) {
             deleteFavorite({ favoriteId, deviceId });
+            toast({
+                title: 'Вы удалили товар из избранного.',
+                action: <Check/>
+            })
             return;
         } 
             addFavorite({ favoriteId, deviceId });
+            toast({
+                title: 'Вы добавили товар в избранное.',
+                action: <Check/>
+            })
   
     };
 
@@ -91,20 +112,56 @@ const CatalogMouse = () => {
     return (
         <div className="flex gap-4 px-4 max-md:flex-col">
             <div className="w-[20%] max-md:w-full">
-                <div>
-                    <div>
+                <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
                         <h4>Фильтрация</h4>
-                        <Input type="text" placeholder="Бренд"/>
-                        <div className="flex">
-                        <Input type="text" placeholder="От"/>
-                        <p>-</p>
-                        <Input type="text" placeholder="До"/>
+                        <div className="flex gap-1 flex-col">
+                            <p>Бренд:</p>
+                            <Select>
+                            <SelectTrigger className="">
+                                <SelectValue placeholder="Выберите бренд" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="light">Light</SelectItem>
+                                <SelectItem value="dark">Dark</SelectItem>
+                                <SelectItem value="system">System</SelectItem>
+                            </SelectContent>
+                        </Select>
                         </div>
-                        <Input type="text" placeholder="Цвет"/>
+                        <div className="flex gap-1 flex-col">
+                            <p>Цена:</p>
+                            <div className="flex gap-2 items-center">
+                                <Input type="text" placeholder="От"/>
+                                <p>-</p>
+                                <Input type="text" placeholder="До"/>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <p>Цвет:</p>
+                        <Select>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Выберите цвет" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="light">Light</SelectItem>
+                                <SelectItem value="dark">Dark</SelectItem>
+                                <SelectItem value="system">System</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        </div>
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-2">
                         <h4>Сортировка</h4>
-                        <Input type="text" placeholder="Бренд"/>
+                        <Select>
+                            <SelectTrigger>
+                                <SelectValue placeholder="По умолчанию" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="light">Light</SelectItem>
+                                <SelectItem value="dark">Dark</SelectItem>
+                                <SelectItem value="system">System</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
             </div>

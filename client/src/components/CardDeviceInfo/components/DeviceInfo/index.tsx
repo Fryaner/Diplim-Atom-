@@ -9,7 +9,7 @@ import {
     useGetFavoriteDeviceIdQuery,
     useDeleteDeviceToFavoriteMutation,
 } from "../../api/apiDevice";
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { Check, Heart, ShoppingBag, Star } from "lucide-react";
 import { Button } from "../../../../UI/Button";
 import { Separator } from "../../../../UI/Separator";
 import { Spinner } from "@radix-ui/themes";
@@ -17,6 +17,11 @@ import { useDispatch } from "react-redux";
 import { basketDeviceCountMinus } from "../../../../store/basketSlice";
 import { useEffect } from "react";
 import { favoriteDeviceCountPlus } from "../../../../store/favoriteSlice";
+import {  Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../UI/Tabs";
+import FeedBackDevices from "../../../../modules/feedBack/components/feedBackDevices";
+import RatingForm from "../../../../modules/feedBack/components/ratingForm";
+import RatingStars from "../../../../modules/feedBack/components/ratingStars";
+import { useToast } from "../../../../UI/UseToast";
 
 const DeviceInfo = () => {
     const basketId = Number(localStorage.getItem('basketId'));
@@ -36,7 +41,7 @@ const DeviceInfo = () => {
     const {data: dataDeviceIdFavorite, refetch: refetchFavorite} = useGetFavoriteDeviceIdQuery({favoriteId})
 
     const dispath = useDispatch();
-
+    const {toast} = useToast();
 
     useEffect(() => {
         if (!dataDeviceId) {
@@ -58,7 +63,6 @@ const DeviceInfo = () => {
             return;
         }
         localStorage.setItem('counts', String(dataDeviceId?.length))
-        localStorage.setItem('totalAmount', String(Number(localStorage.getItem('totalAmount')) + dataDeviceInfo.price))
         dispath(basketDeviceCountMinus(1));
         dispath(basketDeviceCountMinus(1));
     }, [dataDeviceId])
@@ -84,6 +88,11 @@ const DeviceInfo = () => {
             basketId,
             deviceId: dataDeviceInfo.id
         })
+        toast({
+            title: 'Вы добавили товар в корзину.',
+            action: <Check/>
+        })
+        localStorage.setItem('totalAmount', String(Number(localStorage.getItem('totalAmount')) + dataDeviceInfo.price))
     }
 
     const handlerControllFavorite = () => {
@@ -92,11 +101,19 @@ const DeviceInfo = () => {
                 favoriteId,
                 deviceId: dataDeviceInfo.id
             })
+            toast({
+                title: 'Вы удалили товар из избранного.',
+                action: <Check/>
+            })
             return;
         }
         addDeviceFavorite({
             favoriteId,
             deviceId: dataDeviceInfo.id
+        })
+        toast({
+            title: 'Вы добавили товар в избранное.',
+            action: <Check/>
         })
     }
     const nameBrandDevice = dataBrand?.find((brand) => brand.id === dataDeviceInfo?.brandId);
@@ -116,15 +133,7 @@ const DeviceInfo = () => {
                                 <Heart className={`hover:fill-[gray] ${isFavorite ? "fill-[pink]" : "fill-[white]"}`}/>
                             </Button>
                         </p>
-                        <div className="flex gap-2">
-                            <div className="flex">
-                            {starElements.map((isFilled, index) => (
-                                <Star key={index} className={`w-4 ${isFilled ? "fill-[orange]" : "fill-[white]"}`} />
-                            ))}
-                            </div>
-                            <p>-</p>
-                            <p>{dataDeviceInfo.rating}</p>
-                        </div> 
+                            <RatingStars id={Number(id)}/>
                         <Separator/>
                         <p className="flex">Доступно в рассрочку от {(Math.round((dataDeviceInfo.price/6) * 10)/10).toFixed(0)} ₽/мес.</p>
                     </div>
@@ -139,8 +148,13 @@ const DeviceInfo = () => {
                 </div>
             </div>
             <div className="flex flex-col gap-4">
-                <p className="text-[32px] font-bold">Характеристики</p>
-                {dataDeviceInfo.info.length === 0 ? <p>Характеристики товара ещё не были указаны. Приносим извинения.</p> :
+            <Tabs defaultValue="characteristic">
+                <TabsList className="w-full">
+                    <TabsTrigger value="characteristic" className="w-full">Характеристики</TabsTrigger>
+                    <TabsTrigger value="rating"  className="w-full">Отзывы</TabsTrigger>
+                </TabsList>
+                <TabsContent value="characteristic">
+                {dataDeviceInfo.info.length === 0 ? <p className="pt-6">Характеристики товара ещё не были указаны. Приносим извинения.</p> :
                 <ul>
                     {dataDeviceInfo?.info.map((info) =>
                     <div className="flex flex-col gap-4">
@@ -153,6 +167,12 @@ const DeviceInfo = () => {
                     )}
                 </ul>
                 }
+                </TabsContent>
+                <TabsContent value="rating" className="pt-6 flex flex-col gap-12">
+                    {localStorage.getItem("isAuth") === "true" ? <RatingForm/> : <></>}
+                    <FeedBackDevices/>
+                </TabsContent>
+            </Tabs>
             </div>
         </div>
     )

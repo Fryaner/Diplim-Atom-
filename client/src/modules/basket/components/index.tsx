@@ -16,8 +16,9 @@ import { Button } from "../../../UI/Button";
 import CardBasketDevice from "./cardBasketDevice";
 import { useDispatch } from "react-redux";
 import { basketDeviceCountMinus, totalAmountBasketMinus } from "../../../store/basketSlice";
-import { ChevronDown, ChevronUp, RussianRuble } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, RussianRuble, Star } from "lucide-react";
 import { favoriteDeviceCountMinuse } from "../../../store/favoriteSlice";
+import { useToast } from "../../../UI/UseToast";
 
 const Basket = () => {
     const basketId = Number(localStorage.getItem('basketId'));
@@ -38,10 +39,16 @@ const Basket = () => {
     const [isActive, isSetActive] = useState(false);
     const dispatch = useDispatch();
 
+    const {toast} = useToast()
+
     const handlerDeleteDevice = (deviceId: number) => {
         deleteDevice({
             basketId,
             deviceId,
+        })
+        toast({
+            title: `Вы удалили товар из корзины.`,
+            action: <Check/>
         })
     }
 
@@ -50,12 +57,20 @@ const Basket = () => {
             id: basketDeviceId,
             basketId
         })
+        toast({
+            title: 'Вы удалили товар из корзины.',
+            action: <Check/>
+        })
     }
 
     const handlerAddDevice = (deviceId: number) => {
          addDevice({
             basketId,
             deviceId,
+        })
+        toast({
+            title: 'Вы добавили товар в корзину.',
+            action: <Check/>
         })
     }
 
@@ -65,11 +80,19 @@ const Basket = () => {
                 favoriteId,
                 deviceId
             })
+            toast({
+                title: 'Вы удалили товар из избранного.',
+                action: <Check/>
+            })
             return;
         }
         addDeviceFavorite({
             favoriteId,
             deviceId
+        })
+        toast({
+            title: 'Вы добавили товар в избранное.',
+            action: <Check/>
         })
     }
 

@@ -3,6 +3,7 @@ import { Button } from "../../UI/Button";
 import { Heart, RussianRuble, ShoppingBag, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { boolean } from "zod";
+import RatingStars from "../../modules/feedBack/components/ratingStars";
 interface CardDeviceProps {
     id: number;
     model?: string;
@@ -37,10 +38,13 @@ const CardDevice:FC<CardDeviceProps> = ({
     
     return (
             <div className="flex flex-col w-[31%] max-lg:w-[48%]  max-md:w-full border p-4 gap-4 rounded justify-between">
-                <div>
+                <div className="flex flex-col gap-4">
                     <div className="relative z-0">
                         <Link to={`/device/${id}`}>
-                            <img src={`http://localhost:8000/${image}`} alt={descriptionImage}/>
+                            <div className="h-[300px]">
+                                <img  className="h-full object-contains" src={`http://localhost:8000/${image}`} alt={descriptionImage}/>
+                            </div>
+                          
                             </Link>
                         <Button onClick={() => handlerControllerFavorite(id, isFavorite)} className="w-[24px] h-[24px] absolute top-0 right-0" variant="link" size="icon">
                             <Heart className={`hover:fill-[gray] ${isFavorite ? "fill-[pink]" : "fill-[white]"}`}/>
@@ -52,9 +56,7 @@ const CardDevice:FC<CardDeviceProps> = ({
                             </Link>
                         <p className="flex items-center">{price} <RussianRuble className="w-4 h-4"/></p>
                         <div className="flex">
-                        {starElements.map((isFilled, index) => (
-                            <Star key={index} className={isFilled ? "fill-[orange]" : "fill-[white]"} />
-                            ))}
+                            <RatingStars id={id}/>
                         </div>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ import Ram from './ram.jpg';
 import Videocarta from './videocarta.jpg';
 import Mouse from './mouse.jpg';
 import Block from './block.jpg';
+import UserImage from './user.svg';
 
 export {
     Corpus,
@@ -13,5 +14,6 @@ export {
     Ram,
     Videocarta,
     Mouse,
-    Block
+    Block,
+    UserImage,
 } 

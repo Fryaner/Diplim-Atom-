@@ -29,6 +29,8 @@ const LkLayout = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isActiveMenuLc, isSetActiveMenuLc] = useState(false);
+    const [isActiveLcEdit, isSetActiveLcEdit] = useState(false);
+    const [isActiveLcSyls, isSetActiveLcSyls] = useState(false);
     const [isPassword, isSetPassword] = useState('');
     const [deleteUser, {data, isLoading, isError}] = useDeleteUserMutation();
     const [deleteBasket] = useDeleteBasketMutation();
@@ -93,20 +95,14 @@ const LkLayout = () => {
         <MediaQuery minWidth={768}>
             <nav className="flex flex-col justify-between gap-4">
                 <ul className="flex flex-col gap-2">
-                <li>
-                        <NavLink to="history" className={({isActive}) => isActive ? 'ml-2 flex' : 'flex'}>
-                            <ChevronRight className="w-5"/>
-                            История покупок
-                        </NavLink>
-                    </li>
                     <li>
-                        <NavLink to="" className={({isActive}) => isActive ? 'ml-2 flex' : 'flex'}>
+                        <NavLink to="" end className={({isActive}) => isActive ? 'ml-2 flex' : 'ml-0 flex'}>
                             <ChevronRight className="w-5"/>
                             Данные о пользователе
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="syls" className={({isActive}) => isActive ? 'ml-2 flex' : 'flex'}>
+                        <NavLink to="syls" end className={({isActive}) => isActive ? 'ml-2 flex' : 'ml-0 flex'}>
                             <ChevronRight className="w-5"/>
                             Купоны
                         </NavLink>

@@ -5,6 +5,7 @@ import { Heart, Minus, Plus, RussianRuble, Star, Trash } from "lucide-react";
 import { Button } from "../../../../UI/Button";
 import MediaQuery from "react-responsive";
 import { Link } from "react-router-dom";
+import RatingStars from "../../../feedBack/components/ratingStars";
 
 interface CardBasketDeviceProps {
     deviceModel: string;
@@ -40,15 +41,20 @@ const CardBasketDevice: FC<CardBasketDeviceProps> = ({
     return (
                     <div className="flex flex-col gap-6">
                         <div className="flex flex-1 gap-4">
-                            <div className="flex items-center">
+                            <Link to={`/device/${deviceId}`} className="flex items-center">
                                 <img alt="" width="200px" src={`http://localhost:8000/${deviceImage}`}/>
-                            </div>
+                            </Link>
                             <div className="flex flex-col flex-1 max-md:gap-4">
-                                <div className="flex justify-between max-md:flex-col max-md:gap-2">
-                                    <p key={deviceId}>
-                                        <Link to={`/device/${deviceId}`}>{deviceTypeName}/{deviceModel}/{deviceBrandMane}</Link>
-                                    </p>
-                                    <p className="flex font-bold">{devicePrice * deviceCount}<RussianRuble className="w-4"/></p>
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex justify-between max-md:flex-col max-md:gap-2">
+                                        <p key={deviceId}>
+                                            <Link to={`/device/${deviceId}`}>{deviceTypeName}/{deviceModel}/{deviceBrandMane}</Link>
+                                        </p>
+                                        <p className="flex font-bold">{devicePrice * deviceCount}<RussianRuble className="w-4"/></p>
+                                    </div>
+                                    <div>
+                                        <RatingStars id={deviceId}/>
+                                    </div>
                                 </div>
                                 <div className="flex flex-1 items-end justify-between gap-4 max-lg:gap-4 max-md:items-start max-md:flex-col-reverse">
                                     <div className="flex gap-2">

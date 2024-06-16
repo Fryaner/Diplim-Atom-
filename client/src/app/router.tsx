@@ -16,6 +16,7 @@ import RequisitesPage from "../components/requisitesPage";
 import ErrorPage from "../components/errorPage";
 import DeviceInfo from "../components/CardDeviceInfo/components/DeviceInfo";
 import FavoritePage from "../modules/favorite/components/favoritePage";
+import SylsLc from "../modules/lc/components/sylsLc/idnex";
 
 
 export const router = createBrowserRouter([
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
                     {
                         path: '',
                         element: <LcUser/>
+                    },
+                    {
+                        path: 'syls',
+                        element: <SylsLc/>
                     }
                 ]
             }, 

@@ -12,6 +12,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { favoriteDeviceCountMinuse } from "../../../../store/favoriteSlice";
 import { basketDeviceCountMinus } from "../../../../store/basketSlice";
+import { useToast } from "../../../../UI/UseToast";
+import { Check } from "lucide-react";
 const FavoritePage = () => {
     const favoriteId = Number(localStorage.getItem('favoriteId'));
     const basketId = Number(localStorage.getItem('basketId'));
@@ -25,6 +27,8 @@ const FavoritePage = () => {
     const [addDevice, {data: dataAddDevice}] = useAddDeviceMutation();
     const [addDeviceBasket, {data: dataAddDeviceBasket}] = useAddDeviceBasketMutation();
     const [deleteDevice, {data: dataDeleetDevice}] = useDeleteDeviceMutation();
+
+    const {toast} = useToast();
 
     useEffect(() => {
         refetchFavorite();
@@ -55,25 +59,24 @@ const FavoritePage = () => {
     }
 
     const handlerControllFavorite = (deviceId: number) => {
-        const isFavorite = dataDevices.find((item) => item.deviceId === deviceId)
-
-        if (isFavorite) {
             deleteDevice({
                 favoriteId,
                 deviceId
             })
-            return;
-        }
-        addDevice({
-            favoriteId,
-            deviceId
-        })
+            toast({
+                title: 'Вы удалили товар из избранного.',
+                action: <Check/>
+            })
     }
 
     const handlerAddDeviceBasket = (deviceId: number, price: number) => {
         addDeviceBasket({
             basketId,
             deviceId,
+        })
+        toast({
+            title: 'Вы добавили товар в корзину.',
+            action: <Check/>
         })
         localStorage.setItem('totalAmount', String(Number(localStorage.getItem('totalAmount'))+ price))
     }
